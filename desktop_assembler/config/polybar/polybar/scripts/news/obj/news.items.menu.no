@@ -1,0 +1,26 @@
+Computing Minimal Presentations and Bigraded Betti Numbers of 2-Parameter Persistent Homology. (arXiv:1902.05708v6 [math.AT] UPDATED)
+http://arxiv.org/abs/1902.05708
+On a generalization of the topological Brauer group. (arXiv:2004.05710v4 [math.KT] UPDATED)
+http://arxiv.org/abs/2004.05710
+Affine representability of quadrics revisited. (arXiv:2104.08208v2 [math.AG] UPDATED)
+http://arxiv.org/abs/2104.08208
+The diagonal of the operahedra. (arXiv:2110.14062v2 [math.AT] UPDATED)
+http://arxiv.org/abs/2110.14062
+Genera from an algebraic index theorem for supermanifolds. (arXiv:2204.05920v2 [math.QA] UPDATED)
+http://arxiv.org/abs/2204.05920
+Strongly fillable contact structures without Liouville fillings. (arXiv:2205.09912v1 [math.GT])
+http://arxiv.org/abs/2205.09912
+Linear isoperimetric functions for surfaces in hyperbolic groups. (arXiv:2205.10096v1 [math.GT])
+http://arxiv.org/abs/2205.10096
+On a generalization of the topological Brauer group. (arXiv:2004.05710v4 [math.KT] UPDATED)
+http://arxiv.org/abs/2004.05710
+Affine representability of quadrics revisited. (arXiv:2104.08208v2 [math.AG] UPDATED)
+http://arxiv.org/abs/2104.08208
+Quantum Supermaps are Characterized by Locality. (arXiv:2205.09844v1 [quant-ph])
+http://arxiv.org/abs/2205.09844
+Symmetric products of dg categories and semi-orthogonal decompositions. (arXiv:2205.09854v1 [math.AG])
+http://arxiv.org/abs/2205.09854
+Pretriangulated 2-representations via dg algebra 1-morphisms. (arXiv:2205.09999v1 [math.RT])
+http://arxiv.org/abs/2205.09999
+Closure properties of $\varinjlim\mathcal C$. (arXiv:2110.13105v3 [math.RA] UPDATED)
+http://arxiv.org/abs/2110.13105

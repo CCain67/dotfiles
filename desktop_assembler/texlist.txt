@@ -1,0 +1,9 @@
+texinfo
+texlive-bibexextra
+texlive-bin
+texlive-core
+texlive-fontsextra
+texlive-formatsextra
+texlive-latexextra
+texlive-pictures
+texlive-pstricks

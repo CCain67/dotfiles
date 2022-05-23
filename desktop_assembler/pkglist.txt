@@ -1,0 +1,14 @@
+vim
+neofetch
+neovim
+bspwm
+sxhkd
+picom
+polybar
+rofi
+rxvt-unicode
+zathura
+zathura-djvu
+zathura-pdf-poppler
+zathura-ps
+highlight

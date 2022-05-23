@@ -1,0 +1,10 @@
+set font "Whyosevka Bold 11"
+set recolor true
+set recolor-darkcolor "#dab997" 
+set recolor-lightcolor "#262626" 
+set inputbar-fg "#d75f5f" 
+set inputbar-bg "#262626" 
+set default-fg "#dab997" 
+set default-bg "#262626" 
+set statusbar-fg "#85ad85" 
+set statusbar-bg "#262626" 
