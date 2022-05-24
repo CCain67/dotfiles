@@ -29,6 +29,6 @@ do
     echo "$pkg_name copied"
 done
 
-# git add .
-# git commit -m "$1"
-# git push origin master
+git add .
+git commit -m "$1"
+git push origin main
