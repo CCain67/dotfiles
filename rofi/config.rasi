@@ -1,0 +1,86 @@
+configuration {
+    modi: "drun";
+    font: "VictorMono Nerd Font Bold 11";
+    lines: 10;
+    width: 2;
+    columns: 1;
+    display-drun: " ";
+    eh: 1;
+    location: 0;
+    yoffset: 0;
+    xoffset: 0;
+    scrollbar: true;
+}
+textbox-prompt-colon {
+    margin:     0;
+    expand:     false;
+    str:        " ";
+    text-color: inherit;
+}
+entry {
+    text-color:        var(normal-foreground);
+    cursor:            text;
+    spacing:           0;
+    placeholder-color: #665c54;
+    placeholder:       "Type to filter";
+}
+scrollbar {
+    width:        4px ;
+    padding:      0;
+    handle-width: 8px ;
+    border:       0;
+    handle-color: #a9b665;
+}
+window {
+    background: @background;
+    padding: 18px;
+    width: 40%;
+    children: [mainbox];
+}
+mainbox {
+    padding:      5px;
+    border:       0px;
+    spacing:      0px;
+    orientation:  vertical;
+}
+num-filtered-rows {
+    expand:     false;
+    text-color: #665c54;
+}
+num-rows {
+    expand:     false;
+    text-color: #665c54;
+}
+textbox-num-sep {
+    expand:     false;
+    str:        "   ";
+    text-color: #665c54;
+}
+* {
+    background:                  #282828;
+    background-color:            @background;
+    foreground:                  #d4be98;
+    border-color:                @background;
+    separatorcolor:              @border-color;
+
+    normal-background:           @background;
+    normal-foreground:           @foreground;
+    alternate-normal-background: @background;
+    alternate-normal-foreground: @foreground;
+    selected-normal-background:  @background;
+    selected-normal-foreground:  #a9b665;
+
+    active-background:           @background;
+    active-foreground:           #d8a657;
+    alternate-active-background: @active-background;
+    alternate-active-foreground: @active-foreground;
+    selected-active-background:  @active-foreground;
+    selected-active-foreground:  @active-background;
+
+    urgent-background:           @background;
+    urgent-foreground:           #ea6962;
+    alternate-urgent-background: @urgent-background;
+    alternate-urgent-foreground: #ea6962;
+    selected-urgent-background:  @urgent-foreground;
+    selected-urgent-foreground:  @urgent-background;
+}

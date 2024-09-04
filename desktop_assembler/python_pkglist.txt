@@ -1,9 +1,0 @@
-lxml
-matplotlib
-notebook
-numpy
-pandas
-pywal
-pywalfox
-ranger
-seaborn

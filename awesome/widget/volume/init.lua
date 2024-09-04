@@ -1,0 +1,149 @@
+local awful = require("awful")
+local wibox = require("wibox")
+local beautiful = require("beautiful")
+local dpi = require('beautiful').xresources.apply_dpi
+
+local clickable_container = require('widget.clickable-container')
+
+local icon = wibox.widget {
+    id = "icon",
+    markup = "<span color='".. beautiful.bg_normal .."'>󰓃 </span>",
+    font = 'VictorMono Nerd Font 10',
+    align = 'center',
+    valign = 'vcenter',
+    widget = wibox.widget.textbox,
+}
+
+local text = wibox.widget {
+    id = "text",
+    markup = "<span color='".. beautiful.bg_normal .."'>-</span>",
+    font = 'VictorMono Nerd Font Bold 9',
+    align = 'center',
+    valign = 'vcenter',
+    widget = wibox.widget.textbox,
+}
+
+local Volume = function(color)
+    local volume_icon = wibox.widget{
+        {
+            icon,
+            widget = wibox.container.margin,
+            left = dpi(8),   -- Add padding to the left
+            right = dpi(4),  -- Add padding to the right (optional)
+        },
+        bg = color,  -- Replace with your preferred background color
+        widget = wibox.container.background,
+    }
+    local volume_level = wibox.widget{
+        {
+            text,
+            widget = wibox.container.margin,
+            left = dpi(7),   -- Add padding to the left
+            right = dpi(7),  -- Add padding to the right (optional)
+        },
+        bg = beautiful.fg_normal,  -- Replace with your preferred background color
+        widget = wibox.container.background,
+    }
+
+    local volume = wibox.widget {
+        volume_icon,
+        volume_level,
+        layout = wibox.layout.fixed.horizontal,  -- Use fixed horizontal layout to place them side by side
+    }
+
+    local volume_widget = wibox.widget {
+        volume,
+        widget = wibox.container.margin
+    }
+
+    local action_level = wibox.widget {
+        {
+            volume_widget,
+            widget = clickable_container,
+        },
+        bg = beautiful.transparent,
+        widget = wibox.container.background
+    }
+    action_level:buttons(
+        awful.util.table.join(
+            awful.button(
+                {},
+                1,
+                nil,
+                function()
+                    awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")
+                    awesome.emit_signal('widget::volume')
+                end
+            ),
+            awful.button(
+                {},
+                4,
+                nil,
+                function()
+                    awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")
+                    awesome.emit_signal('widget::volume')
+                end
+            ),
+            awful.button(
+                {},
+                5,
+                nil,
+                function()
+                    awful.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")
+                    awesome.emit_signal('widget::volume')
+                end
+            )
+        )
+    )
+
+    return action_level
+end
+
+local update_slider = function()
+    awful.spawn.easy_async_with_shell(
+        [[bash -c "pactl get-sink-volume @DEFAULT_SINK@; pactl get-sink-mute @DEFAULT_SINK@" ]],
+        function(stdout)
+            -- Split the output into volume and mute status
+            local volume_stdout, mute_stdout = stdout:match("^(.-)\n(.-)\n*$")
+
+            -- Extract the volume info
+            local volume = volume_stdout:match('(%d?%d?%d)%%')
+            local volumeNumber = tonumber(volume)
+            local isMuted = mute_stdout:match("Mute: yes")
+
+            if isMuted then
+                icon:set_markup_silently("<span color='".. beautiful.bg_normal .."'>󰓄 </span>")
+                text:set_markup_silently("<span color='".. beautiful.bg_normal .."'>muted</span>")
+            elseif volumeNumber then
+                icon:set_markup_silently("<span color='".. beautiful.bg_normal .."'>󰓃 </span>")
+                text:set_markup_silently("<span color='".. beautiful.bg_normal .."'>" .. volumeNumber .. "</span>")
+            else
+                icon:set_markup_silently("<span color='".. beautiful.bg_normal .."'>󰓃 </span>")
+                text:set_markup_silently("<span color='".. beautiful.bg_normal .."'>null</span>")
+            end
+        end
+    )
+end
+
+-- Update on startup
+update_slider()
+
+-- The emit will come from the global keybind
+awesome.connect_signal(
+    'widget::volume',
+    function()
+        update_slider()
+    end
+)
+
+
+-- The emit will come from the OSD
+awesome.connect_signal(
+	'widget::volume:update',
+	function(value)
+		-- volume_slider:set_value(tonumber(value))
+		update_slider()
+	end
+)
+
+return Volume
