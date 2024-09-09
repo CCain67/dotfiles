@@ -32,18 +32,21 @@ draw = ImageDraw.Draw(image)
 # for keeping track of which squares are colored
 colored_grid = [[False for _ in range(num_squares_x)] for _ in range(num_squares_y)]
 
-for j in range(num_squares_y):
-    for i in range(num_squares_x):
-        square_index = j * num_squares_x + i
-        probability = max(98 - 2.5 * j, 0) / 100
-        if random.random() < probability:
-            fill_color = random.choice(color_pool)
-            colored_grid[j][i] = True
-        else:
-            fill_color = default_color
+if __name__ == "__main__":
+    for j in range(num_squares_y):
+        for i in range(num_squares_x):
+            square_index = j * num_squares_x + i
+            probability = max(98 - 2.5 * j, 0) / 100
+            if random.random() < probability:
+                fill_color = random.choice(color_pool)
+                colored_grid[j][i] = True
+            else:
+                fill_color = default_color
 
-        top_left = (i * square_size, j * square_size)
-        bottom_right = ((i + 1) * square_size - 1, (j + 1) * square_size - 1)
-        draw.rectangle([top_left, bottom_right], fill=fill_color, outline=border_color)
+            top_left = (i * square_size, j * square_size)
+            bottom_right = ((i + 1) * square_size - 1, (j + 1) * square_size - 1)
+            draw.rectangle(
+                [top_left, bottom_right], fill=fill_color, outline=border_color
+            )
 
-image.save("/home/chase/.config/awesome/backgrounds/generated_wallpaper.png")
+    image.save("/home/chase/.config/awesome/backgrounds/generated_wallpaper.png")

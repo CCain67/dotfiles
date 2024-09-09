@@ -24,7 +24,7 @@ COLOR_POOL = {
 ]]
 
 local function generate_zathura_config()
-    local background_colors = io.open("/home/chase/.config/awesome/scripts/asset_generation/colors.py", "w")
+    local background_colors = io.open(os.getenv("HOME") .. "/.config/awesome/scripts/asset_generation/colors.py", "w")
 
     background_colors:write(config_string)
     background_colors:close()

@@ -3,7 +3,6 @@ local user = {
 	-- user info
 	name         = "Chase",
     modkey       = "Mod4",
-    --user_img     = os.getenv("HOME") .. "/.config/awesome/assets/user.png",
 
 	-- apps
 	terminal     = "gnome-terminal",
@@ -17,6 +16,7 @@ local user = {
     theme        = "gruvbox", -- available themes: [gruvbox, everforest, nord, rose_pine]
 
     -- behavior
+    generate_background = false,
     generate_rofi_config = false,
     generate_zathura_config = false,
 }

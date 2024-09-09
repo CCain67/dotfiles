@@ -9,7 +9,7 @@ local clickable_container = require('widget.clickable-container')
 local icon = wibox.widget {
     id = "icon",
     markup = "<span color='".. beautiful.bg_normal .."'> </span>",
-    font = 'VictorMono Nerd Font 10',
+    font = beautiful.font .. ' 10',
     align = 'center',
     valign = 'vcenter',
     widget = wibox.widget.textbox,
@@ -18,7 +18,7 @@ local icon = wibox.widget {
 local text = wibox.widget {
     id = "icon",
     markup = "<span color='".. beautiful.bg_normal .."'>-</span>",
-    font = 'VictorMono Nerd Font Bold 9',
+    font = beautiful.font_bold .. ' 9',
     align = 'center',
     valign = 'vcenter',
     widget = wibox.widget.textbox,

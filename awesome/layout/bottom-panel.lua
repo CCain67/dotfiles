@@ -75,7 +75,7 @@ local BottomPanel = function(s)
             markup = "<span color='" .. beautiful.system_white_dark .. "'> </span>",
             align = 'center',
             valign = 'center',
-            font = 'VictorMono Nerd Font 16',
+            font = beautiful.font .. ' 16',
             widget = wibox.widget.textbox
         },
         widget = clickable_container

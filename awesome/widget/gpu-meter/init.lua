@@ -10,7 +10,7 @@ local GpuMeter = function(color)
             {
                 id = "icon",
                 markup = "<span color='" .. beautiful.bg_normal .. "' font='15'>󰘚 </span>",
-                font = 'VictorMono Nerd Font 10',
+                font = beautiful.font .. ' 10',
                 align = 'center',
                 valign = 'vcenter',
                 widget = wibox.widget.textbox,
@@ -28,7 +28,7 @@ local GpuMeter = function(color)
             awful.widget.watch('bash -c "nvidia-smi --query-gpu=utilization.gpu --format=csv,nounits,noheader"',30, function(widget, stdout)
                 for line in stdout:gmatch("[^\\r\\n]+") do
                     line = string.format("%02d", tonumber(line))
-                    widget.font = ('VictorMono Nerd Font Bold 9')
+                    widget.font = (beautiful.font_bold .. ' 9')
                     widget.markup = ('<span color=\'' .. beautiful.bg_normal .. '\'> ' .. line .. '%</span>')
                     widget.align = 'center'
                     widget.valign = 'center'

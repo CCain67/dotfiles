@@ -14,6 +14,8 @@ local NetworkWidget = require('widget.network')
 local VolumeWidget = require('widget.volume')
 local clickable_container = require('widget.clickable-container')
 
+local dashboard = require("popups.dashboard.main")
+
 local TopPanel = function(s)
     local panel = wibox({
         ontop = false,
@@ -91,11 +93,15 @@ local TopPanel = function(s)
             markup = "<span color='" .. beautiful.system_white_dark .. "'> </span>",
             align = 'center',
             valign = 'center',
-            font = 'VictorMono Nerd Font 14',
+            font = beautiful.font .. ' 14',
             widget = wibox.widget.textbox
         },
         widget = clickable_container
     }
+
+    widget_dashboard_button:connect_signal("button::release", function()
+        dashboard.visible = not dashboard.visible
+    end)
 
     local distribution = wibox.widget {
         {

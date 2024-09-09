@@ -44,7 +44,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 awful.screen.connect_for_each_screen(
     function(s)
         set_wallpaper(s)
-        awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+        awful.tag({ "1", "2", "3", "4", "5", "6" }, s, awful.layout.layouts[1])
         s.top_panel = top_panel(s)
         -- s.bottom_panel = bottom_panel(s)
         -- s.bottom_secondary_panel = bottom_secondary_panel(s)

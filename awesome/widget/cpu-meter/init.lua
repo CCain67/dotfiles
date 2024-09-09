@@ -14,7 +14,7 @@ local CPUMeter = function(color)
             {
                 id = "icon",
                 markup = "<span color='" .. beautiful.bg_normal .. "' font='10'> </span>",
-                font = 'VictorMono Nerd Font 10',
+                font = beautiful.font .. ' 10',
                 align = 'center',
                 valign = 'vcenter',
                 widget = wibox.widget.textbox,
@@ -41,7 +41,7 @@ local CPUMeter = function(color)
 				collectgarbage('collect')
 
 				line = string.format("%02d", math.floor(diff_usage))
-				widget.font = ('VictorMono Nerd Font Bold 9')
+				widget.font = (beautiful.font_bold .. ' 9')
 				widget.markup = ('<span color="' .. beautiful.bg_normal .. '"> ' .. line .. '%</span>')
 				widget.align = 'center'
 				widget.valign = 'center'

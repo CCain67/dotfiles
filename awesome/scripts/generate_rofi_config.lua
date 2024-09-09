@@ -4,7 +4,7 @@ local naughty = require("naughty")
 local config_string = [[
 configuration {
     modi: "drun";
-    font: "VictorMono Nerd Font Bold 11";
+    font: "]] .. theme.font_bold .. [[ 11";
     lines: 10;
     width: 2;
     columns: 1;
@@ -122,7 +122,7 @@ local colors_string = [[
 ]]
 
 local function generate_rofi_config()
-    local rofi_config = io.open("/home/chase/.config/rofi/config.rasi", "w")
+    local rofi_config = io.open(os.getenv("HOME") .. "/.config/rofi/config.rasi", "w")
 
     naughty.notify({
         preset = naughty.config.presets.normal,
@@ -132,7 +132,7 @@ local function generate_rofi_config()
     rofi_config:write(config_string)
     rofi_config:close()
 
-    local color_config = io.open("/home/chase/.config/rofi/powermenu/colors.rasi", "w")
+    local color_config = io.open(os.getenv("HOME") .. "/.config/rofi/powermenu/colors.rasi", "w")
     color_config:write(colors_string)
     color_config:close()
 end

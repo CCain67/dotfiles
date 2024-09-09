@@ -2,7 +2,7 @@ local theme = require("beautiful").get()
 local naughty = require("naughty")
 
 local config_string = [[
-set font "]] .. theme.font_bold .. [[" 
+set font "]] .. theme.font_bold .. [[" 10
 set recolor true 
 set recolor-darkcolor "]] .. theme.fg_normal .. [[" 
 set recolor-lightcolor "]] .. theme.bg_normal .. [[" 
@@ -15,7 +15,7 @@ set statusbar-bg "]] .. theme.bg_normal .. [["
 ]]
 
 local function generate_zathura_config()
-    local zathura_config = io.open("/home/chase/.config/zathura/zathurarc", "w")
+    local zathura_config = io.open(os.getenv("HOME") .. "/.config/zathura/zathurarc", "w")
 
     naughty.notify({
         preset = naughty.config.presets.normal,

@@ -2,11 +2,13 @@
 local gears = require("gears")
 local awful = require("awful")
 local hotkeys_popup = require("awful.hotkeys_popup")
-
+-- local control_center = require("popups.control_center.main")
 local menubar = require("menubar")
 
 -- Enable hotkeys help widget for VIM and other apps when client with a matching name is opened
 require("awful.hotkeys_popup.keys")
+
+local dashboard = require("popups.dashboard.main")
 
 
 -- Key bindings
@@ -99,7 +101,13 @@ globalkeys = gears.table.join(
             awesome.emit_signal('widget::brightness')
         end
     ),
-    -- Layout manipulation
+    -- Sidebar
+	awful.key(
+        { "Mod4" }, "x",
+        function() dashboard.visible = not dashboard.visible end,
+        { description = "Open Dashboard", group = "custom" }
+    ),
+        -- Layout manipulation
     awful.key(
         { modkey, "Shift" }, "j",
         function () awful.client.swap.byidx(  1) end,
@@ -226,18 +234,18 @@ globalkeys = gears.table.join(
         function () awful.screen.focused().mypromptbox:run() end,
         {description = "run prompt", group = "launcher"}
     ),
-    awful.key(
-        { modkey }, "x",
-        function ()
-            awful.prompt.run {
-            prompt       = "Run Lua code: ",
-            textbox      = awful.screen.focused().mypromptbox.widget,
-            exe_callback = awful.util.eval,
-            history_path = awful.util.get_cache_dir() .. "/history_eval"
-            }
-        end,
-        {description = "lua execute prompt", group = "awesome"}
-    ),
+    -- awful.key(
+    --     { modkey }, "x",
+    --     function ()
+    --         awful.prompt.run {
+    --         prompt       = "Run Lua code: ",
+    --         textbox      = awful.screen.focused().mypromptbox.widget,
+    --         exe_callback = awful.util.eval,
+    --         history_path = awful.util.get_cache_dir() .. "/history_eval"
+    --         }
+    --     end,
+    --     {description = "lua execute prompt", group = "awesome"}
+    -- ),
     -- Menubar
     awful.key(
         { modkey }, "d",
@@ -248,7 +256,7 @@ globalkeys = gears.table.join(
     ),
     awful.key(
         { modkey }, "p",
-        function () awful.spawn("/home/chase/.config/awesome/scripts/powermenu.sh") end,
+        function () awful.spawn(os.getenv("HOME") .. "/.config/awesome/scripts/powermenu.sh") end,
         {description = "open power menu", group = "apps"}
     )
 )

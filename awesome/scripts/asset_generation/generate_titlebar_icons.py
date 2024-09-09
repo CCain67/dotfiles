@@ -2,7 +2,7 @@
 
 import textwrap
 
-from colors import THEME_NAME, COLOR_POOL
+from colors import COLOR_POOL, THEME_NAME
 
 ICON_TO_COLOR = {
     "close": "red",
@@ -74,27 +74,11 @@ def create_svg_string(color: str) -> str:
 
 
 # generate icons
-for icon_type in ["close", "minimize"]:
-    for view in ["normal", "focus"]:
-        for mouse in ["", "_hover"]:
-            file_name = icon_type + "_" + view + mouse + ".svg"
-            if mouse == "_hover":
-                color = brighten_hex_color(
-                    COLOR_POOL[ICON_TO_COLOR[icon_type]], BRIGHTNESS_INCREASE
-                )
-            else:
-                color = COLOR_POOL[ICON_TO_COLOR[icon_type]]
-            svg_string = create_svg_string(color)
-            with open(ICON_PATH + file_name, "w+") as file:
-                file.write(svg_string)
-            print(f"Generated {file_name}")
-
-
-for icon_type in ["floating", "maximized", "ontop", "sticky"]:
-    for view in ["normal", "focus"]:
-        for state in ["active", "inactive"]:
+if __name__ == "__main__":
+    for icon_type in ["close", "minimize"]:
+        for view in ["normal", "focus"]:
             for mouse in ["", "_hover"]:
-                file_name = icon_type + "_" + view + "_" + state + mouse + ".svg"
+                file_name = icon_type + "_" + view + mouse + ".svg"
                 if mouse == "_hover":
                     color = brighten_hex_color(
                         COLOR_POOL[ICON_TO_COLOR[icon_type]], BRIGHTNESS_INCREASE
@@ -105,3 +89,19 @@ for icon_type in ["floating", "maximized", "ontop", "sticky"]:
                 with open(ICON_PATH + file_name, "w+") as file:
                     file.write(svg_string)
                 print(f"Generated {file_name}")
+
+    for icon_type in ["floating", "maximized", "ontop", "sticky"]:
+        for view in ["normal", "focus"]:
+            for state in ["active", "inactive"]:
+                for mouse in ["", "_hover"]:
+                    file_name = icon_type + "_" + view + "_" + state + mouse + ".svg"
+                    if mouse == "_hover":
+                        color = brighten_hex_color(
+                            COLOR_POOL[ICON_TO_COLOR[icon_type]], BRIGHTNESS_INCREASE
+                        )
+                    else:
+                        color = COLOR_POOL[ICON_TO_COLOR[icon_type]]
+                    svg_string = create_svg_string(color)
+                    with open(ICON_PATH + file_name, "w+") as file:
+                        file.write(svg_string)
+                    print(f"Generated {file_name}")

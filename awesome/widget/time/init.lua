@@ -11,7 +11,7 @@ local time = function(color)
             {
                 id = "icon",
                 markup = "<span color='".. beautiful.bg_normal .. "' font='10'> </span>",
-                font = 'VictorMono Nerd Font 10',
+                font = beautiful.font .. ' 10',
                 align = 'center',
                 valign = 'vcenter',
                 widget = wibox.widget.textbox,
@@ -29,7 +29,7 @@ local time = function(color)
             awful.widget.watch('bash -c "date \'+%I:%M %p\'"' ,10, function(widget, stdout)
 				for line in stdout:gmatch("[^\r\n]+") do
 					-- line = string.format("%02d", tonumber(line))
-					widget.font = ('VictorMono Nerd Font Bold 9')
+					widget.font = (beautiful.font_bold .. ' 9')
 					widget.markup = ('<span color=\'' .. beautiful.bg_normal .. '\'> ' .. line .. '</span>')
 					return
 				end

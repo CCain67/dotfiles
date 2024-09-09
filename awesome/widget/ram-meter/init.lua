@@ -10,7 +10,7 @@ local RamMeter = function(color)
             {
                 id = "icon",
                 markup = "<span color='".. beautiful.bg_normal .. "' font='10'>  </span>",
-                font = 'VictorMono Nerd Font 10',
+                font = beautiful.font .. ' 10',
                 align = 'center',
                 valign = 'vcenter',
                 widget = wibox.widget.textbox,
@@ -28,7 +28,7 @@ local RamMeter = function(color)
             awful.widget.watch('bash -c "free | grep Mem | awk \'{print int($3/$2 * 100.0)}\'"' ,30, function(widget, stdout)
 				for line in stdout:gmatch("[^\r\n]+") do
 					line = string.format("%02d", tonumber(line))
-					widget.font = ('VictorMono Nerd Font Bold 9')
+					widget.font = (beautiful.font_bold .. ' 9')
 					widget.markup = ('<span color=\'' .. beautiful.bg_normal .. '\'> ' .. line .. '%</span>')
 					widget.align = 'center'
 					widget.valign = 'center'

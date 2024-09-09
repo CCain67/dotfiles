@@ -20,7 +20,7 @@ local network_mode = nil
 local network_icon = wibox.widget {
     id = 'icon',
     markup = "<span color='".. beautiful.bg_normal .."'>󰖪 </span>",
-    font = 'VictorMono Nerd Font 10',
+    font = beautiful.font .. ' 10',
     widget = wibox.widget.textbox,
     align = 'center',
     valign = 'vcenter'
@@ -29,7 +29,7 @@ local network_icon = wibox.widget {
 local essid_textbox = wibox.widget {
     id = 'text',
     markup = "<span color='".. beautiful.bg_normal .."'>?</span>",
-    font = 'VictorMono Nerd Font Bold 9',
+    font = beautiful.font_bold .. ' 9',
     widget = wibox.widget.textbox,
     align = 'center',
     valign = 'vcenter'
@@ -112,7 +112,7 @@ local return_button = function(color)
 
 	local network_tooltip = awful.tooltip {
 		text = 'Loading...',
-        font = 'VictorMono Nerd Font 10',
+        font = beautiful.font .. ' 10',
 		objects = {widget_button},
 		mode = 'outside',
 		align = 'right',

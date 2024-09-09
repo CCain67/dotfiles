@@ -1,20 +1,18 @@
 local awful = require('awful')
+local beautiful = require('beautiful')
 local wibox = require('wibox')
 local dpi = require('beautiful').xresources.apply_dpi
 local theme = require('theme')
 
 
-local icon_font = "VictorMono Nerd Font 16"  -- Use your specific icon font here
+local icon_font = beautiful.font .. " 16"
 local tag_icons = {
-    "󰎤",
-    "󰎧",
-    "󰎪",
-    "󰎭",
-    "󰎱",
-    "󰎳",
-    "󰎶",
-    "󰎹",
-    "󰎼"
+    "󰇊",
+    "󰇋",
+    "󰇌",
+    "󰇍",
+    "󰇎",
+    "󰇏"
 }
 local color_focus = theme.fg_focus
 local color_empty = theme.system_black_light

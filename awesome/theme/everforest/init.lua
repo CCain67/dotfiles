@@ -12,11 +12,11 @@ local tip = titlebar_icon_path
 local theme = {}
 
 theme.icons = theme_dir .. '/icons/'
-theme.font = 'VictorMono Nerd Font 10'
-theme.font_bold = 'VictorMono Nerd Font Bold 10'
+theme.font = 'VictorMono Nerd Font'
+theme.font_bold = 'VictorMono Nerd Font Bold'
 
 -- Colorscheme
-theme.system_black_dark = '#272e33'
+theme.system_black_dark = '#374145'
 theme.system_black_light = '#374145'
 
 theme.system_white_dark = '#f2efdf'

@@ -14,9 +14,6 @@ awful.spawn.with_shell("picom --experimental-backends")
 awful.spawn.with_shell("pactl set-default-sink alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__sink")
 awful.spawn.with_shell("pactl set-default-source alsa_input.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi__hw_sofhdadsp__source")
 
-require("scripts.generate_background_colors")
-awful.spawn.with_shell("python3 ~/.config/awesome/scripts/asset_generation/generate_wallpaper.py")
-
 -- Load the profile configuration file
 local profile = require("user.profile")
 
@@ -27,6 +24,10 @@ editor_cmd = profile.editor_cmd
 
 
 -- must be called after beautiful.init
+if profile.generate_background then
+    require("scripts.generate_background_colors")
+    awful.spawn.with_shell("python3 ~/.config/awesome/scripts/asset_generation/generate_wallpaper.py")
+end
 if profile.generate_rofi_config then
     require("scripts.generate_rofi_config")
 end
@@ -45,7 +46,7 @@ require("user")
 if awesome.startup_errors then
     naughty.notify({
         preset = naughty.config.presets.critical,
-        title = "Task failed successfully!",
+        title = "Startup failed successfully!",
         text = awesome.startup_errors
     })
 end
@@ -60,7 +61,7 @@ do
             naughty.notify(
                 {
                     preset = naughty.config.presets.critical,
-                    title = "Task failed successfully!",
+                    title = "Startup failed successfully!",
                     text = tostring(err)
                 }
             )

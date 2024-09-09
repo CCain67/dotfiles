@@ -44,7 +44,7 @@ local BatteryMeter = function(color)
                             bg = beautiful.bg_normal
                         })
                     end
-                    widget.font = ('VictorMono Nerd Font 13')
+                    widget.font = (beautiful.font .. ' 13')
                     widget.markup = (markup_battery)
                     widget.align = 'center'
                     widget.valign = 'center'
@@ -64,7 +64,7 @@ local BatteryMeter = function(color)
             awful.widget.watch('bash -c "upower -i $(upower -e | grep BAT) | grep percentage | sed \'s/%//\' | awk \'{print $2}\'"', 30, function(
                 widget, stdout)
                 for line in stdout:gmatch("[^\r\n]+") do
-                    widget.font = ('VictorMono Nerd Font Bold 9')
+                    widget.font = (beautiful.font_bold .. ' 9')
                     widget.markup = ('<span color=\'' .. beautiful.bg_normal .. '\'> ' .. line .. '%</span>')
                     widget.align = 'center'
                     widget.valign = 'center'
