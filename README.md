@@ -6,6 +6,10 @@ Features auto generated wallpaper and config files for rofi and zathura based on
 
 ### Screenshots
 
+VS Code + Zathura, and window transparency controlled by picom:
+
+![](screenshots/screenshot.png)
+
 System dashboard and rofi application launcher:
 
 ![](screenshots/screenshot_000.png)
