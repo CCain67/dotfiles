@@ -1,0 +1,5 @@
+singleton Colors 1.0 Colors.qml
+singleton Hypr 1.0 Hypr.qml
+singleton Time 1.0 Time.qml
+singleton Screens 1.0 Screens.qml
+singleton Visibilities 1.0 Visibilities.qml
