@@ -57,8 +57,14 @@ Singleton {
         readonly property bool expire: true
         readonly property int defaultExpireTimeout: 5000
         readonly property bool actionOnClick: false
-        readonly property int groupPreviewNum: 3
+        readonly property bool openExpanded: false
+        readonly property real clearThreshold: 0.3
+        readonly property int expandThreshold: 50
         readonly property int width: 400
+        readonly property QtObject sizes: QtObject {
+            readonly property int image: 48
+            readonly property int badge: 20
+        }
     }
 
     readonly property QtObject osd: QtObject {

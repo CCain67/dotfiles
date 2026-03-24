@@ -20,6 +20,18 @@ Item {
 
         MaterialIcon {
             Layout.alignment: Qt.AlignHCenter
+            text: "brightness_medium"
+            color: Colors.orange
+            font.pointSize: Appearance.font.size.normal
+        }
+
+        Item {
+            implicitWidth: 1
+            implicitHeight: 8
+        }
+        
+        MaterialIcon {
+            Layout.alignment: Qt.AlignHCenter
             text: "wifi"
             color: Colors.palette.m3secondary
             font.pointSize: Appearance.font.size.normal
