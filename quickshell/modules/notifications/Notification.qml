@@ -157,6 +157,7 @@ StyledRect {
 
                     sourceComponent: StyledRect {
                         radius: Appearance.rounding.full
+                        visible: !root.hasAppIcon
                         color: root.isCritical
                             ? Colors.palette.m3error
                             : root.modelData.urgency === NotificationUrgency.Low
@@ -164,16 +165,6 @@ StyledRect {
                                 : Colors.palette.m3secondaryContainer
                         implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                         implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
-
-                        Image {
-                            anchors.centerIn: parent
-                            width: Math.round(parent.width * 0.6)
-                            height: Math.round(parent.width * 0.6)
-                            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : ""
-                            fillMode: Image.PreserveAspectFit
-                            visible: root.hasAppIcon
-                            asynchronous: true
-                        }
 
                         MaterialIcon {
                             anchors.centerIn: parent
