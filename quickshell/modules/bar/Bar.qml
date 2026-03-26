@@ -8,8 +8,6 @@ import "../../services"
 import "../../config"
 import "components"
 
-// Vertical left-edge bar. Column layout top-to-bottom:
-//   OsIcon → Workspaces → ActiveWindow (fill) → StatusIcons → Power → Clock
 ColumnLayout {
     id: root
 
@@ -23,17 +21,38 @@ ColumnLayout {
     // Top padding
     Item {
         implicitWidth: 1
-        implicitHeight: root.vPadding
+        implicitHeight: 0
     }
 
-    OsIcon {
+    Clock {
         Layout.alignment: Qt.AlignHCenter
+    }
+
+    Rectangle {
+            Layout.alignment: Qt.AlignHCenter
+            width: 22
+            height: 2
+            color: Colors.palette.m3surfaceBright
+    }
+    Apps {
+        Layout.alignment: Qt.AlignHCenter
+    }
+    Rectangle {
+            Layout.alignment: Qt.AlignHCenter
+            width: 22
+            height: 2
+            color: Colors.palette.m3surfaceBright
     }
 
     Workspaces {
         Layout.alignment: Qt.AlignHCenter
     }
-
+    Rectangle {
+            Layout.alignment: Qt.AlignHCenter
+            width: 22
+            height: 2
+            color: Colors.palette.m3surfaceBright
+    }
     ActiveWindow {
         Layout.fillHeight: true
         Layout.fillWidth: true
@@ -47,18 +66,26 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
     }
 
-    Clock {
+    RamMeter {
         Layout.alignment: Qt.AlignHCenter
     }
 
-    Power {
+    CpuMeter {
         Layout.alignment: Qt.AlignHCenter
-        visibilities: root.visibilities
     }
+
+    GpuMeter {
+        Layout.alignment: Qt.AlignHCenter
+    }
+
+    // Power {
+    //     Layout.alignment: Qt.AlignHCenter
+    //     visibilities: root.visibilities
+    // }
 
     // Bottom padding
     Item {
         implicitWidth: 1
-        implicitHeight: root.vPadding
+        implicitHeight: 0
     }
 }

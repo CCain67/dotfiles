@@ -1,7 +1,11 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import "../../components"
 
-// Phase 2 stub — panel slots populated in Phase 3+ (notifications, OSD, session, launcher)
+// Panel content area — future panels (launcher, etc.) to follow.
 Item {
+    id: root
+
     required property DrawerVisibilities visibilities
 }

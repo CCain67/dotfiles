@@ -3,7 +3,7 @@ import "../../../components"
 import "../../../services"
 import "../../../config"
 
-// Power button — toggles the session menu (implemented Phase 4).
+// Power button — visual indicator only; power menu lives in the right-edge OSD.
 Item {
     id: root
 
@@ -11,12 +11,6 @@ Item {
 
     implicitWidth: Config.bar.innerWidth
     implicitHeight: powerIcon.implicitHeight + Appearance.padding.small * 2
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onClicked: root.visibilities.session = !root.visibilities.session
-    }
 
     MaterialIcon {
         id: powerIcon

@@ -8,6 +8,7 @@ import "../../components/containers"
 import "../../services"
 import "../../config"
 import "../bar"
+import "../osd" as Osd
 
 // Single-monitor drawers: full-screen overlay containing bar, border, and panel slots.
 // Input mask punches out the empty interior so clicks pass through to the desktop.
@@ -27,7 +28,7 @@ Scope {
         screen: root.screen
         name: "drawers"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session
+        WlrLayershell.keyboardFocus: visibilities.launcher
             ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
         anchors.top: true
@@ -35,8 +36,12 @@ Scope {
         anchors.left: true
         anchors.right: true
 
-        // XOR mask: start with full window, subtract interior → only bar + border edges are interactive
-        mask: Region {
+        // XOR mask: start with full window, subtract interior → only bar + border edges are interactive.
+        // Cleared when an overlay panel (launcher, osd) is open so the panel receives input.
+        mask: visibilities.osd ? null : interiorMask
+
+        Region {
+            id: interiorMask
             x: bar.implicitWidth
             y: Config.border.thickness
             width: win.width - bar.implicitWidth - Config.border.thickness
@@ -68,6 +73,15 @@ Scope {
             anchors.bottomMargin: Config.border.thickness
             anchors.leftMargin: bar.implicitWidth
             anchors.rightMargin: Config.border.thickness
+
+            visibilities: visibilities
+        }
+
+        // Right-edge OSD
+        Osd.Wrapper {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
 
             visibilities: visibilities
         }

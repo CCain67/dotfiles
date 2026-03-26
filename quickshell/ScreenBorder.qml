@@ -14,7 +14,7 @@ PanelWindow {
 
     readonly property int barWidth: 8       // bar exclusive zone
     readonly property int leftThickness: 0  // left gap, tune to match other sides visually
-    readonly property int thickness: 12     // top, right, bottom
+    readonly property int thickness: 12   // top, right, bottom
     readonly property int rounding: 12
 
     // Full-screen colored rect, masked to show only the border frame

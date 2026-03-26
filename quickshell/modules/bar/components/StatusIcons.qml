@@ -6,34 +6,24 @@ import "../../../config"
 
 // Status icon strip. Phase 2: wifi placeholder only.
 // Audio, network service, Bluetooth added when those services are ported (Phase 3).
-Item {
+Rectangle {
     id: root
 
-    implicitWidth: Config.bar.innerWidth
-    implicitHeight: iconCol.implicitHeight + Appearance.padding.small * 2
+    implicitWidth: Config.bar.innerWidth + Appearance.padding.smaller
+    implicitHeight: iconCol.implicitHeight + Appearance.padding.normal
+    color: Colors.palette.m3surfaceDim
+    radius: 6
 
     ColumnLayout {
         id: iconCol
 
         anchors.centerIn: parent
-        spacing: Appearance.spacing.small / 2
-
-        MaterialIcon {
-            Layout.alignment: Qt.AlignHCenter
-            text: "brightness_medium"
-            color: Colors.orange
-            font.pointSize: Appearance.font.size.normal
-        }
-
-        Item {
-            implicitWidth: 1
-            implicitHeight: 8
-        }
+        spacing: 1
         
         MaterialIcon {
             Layout.alignment: Qt.AlignHCenter
             text: "wifi"
-            color: Colors.palette.m3secondary
+            color: Colors.green
             font.pointSize: Appearance.font.size.normal
         }
     }
