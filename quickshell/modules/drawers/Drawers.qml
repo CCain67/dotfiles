@@ -28,7 +28,7 @@ Scope {
         screen: root.screen
         name: "drawers"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: visibilities.launcher
+        WlrLayershell.keyboardFocus: (Visibilities.visibilities.launcher || Visibilities.visibilities.session)
             ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
         anchors.top: true
@@ -38,7 +38,7 @@ Scope {
 
         // XOR mask: start with full window, subtract interior → only bar + border edges are interactive.
         // Cleared when an overlay panel (launcher, osd) is open so the panel receives input.
-        mask: visibilities.osd ? null : interiorMask
+        mask: (Visibilities.visibilities.osd || Visibilities.visibilities.launcher) ? null : interiorMask
 
         Region {
             id: interiorMask
@@ -47,10 +47,6 @@ Scope {
             width: win.width - bar.implicitWidth - Config.border.thickness
             height: win.height - Config.border.thickness * 2
             intersection: Intersection.Xor
-        }
-
-        DrawerVisibilities {
-            id: visibilities
         }
 
         // Screen border drawn behind everything
@@ -74,7 +70,7 @@ Scope {
             anchors.leftMargin: bar.implicitWidth
             anchors.rightMargin: Config.border.thickness
 
-            visibilities: visibilities
+            visibilities: Visibilities.visibilities
         }
 
         // Right-edge OSD
@@ -83,7 +79,7 @@ Scope {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
 
-            visibilities: visibilities
+            visibilities: Visibilities.visibilities
         }
 
         // Left-edge bar
@@ -94,7 +90,7 @@ Scope {
             anchors.bottom: parent.bottom
 
             screen: root.screen
-            visibilities: visibilities
+            visibilities: Visibilities.visibilities
         }
     }
 }

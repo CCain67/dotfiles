@@ -36,6 +36,7 @@ ColumnLayout {
     }
     Apps {
         Layout.alignment: Qt.AlignHCenter
+        visibilities: root.visibilities
     }
     Rectangle {
             Layout.alignment: Qt.AlignHCenter
@@ -78,10 +79,10 @@ ColumnLayout {
         Layout.alignment: Qt.AlignHCenter
     }
 
-    // Power {
-    //     Layout.alignment: Qt.AlignHCenter
-    //     visibilities: root.visibilities
-    // }
+    Power {
+        Layout.alignment: Qt.AlignHCenter
+        visibilities: root.visibilities
+    }
 
     // Bottom padding
     Item {

@@ -3,9 +3,11 @@ import "../../../components"
 import "../../../services"
 import "../../../config"
 
-// OS logo button. Will toggle the launcher in Phase 4.
+// OS logo button — toggles the app launcher.
 Item {
     id: root
+
+    required property DrawerVisibilities visibilities
 
     implicitWidth: Config.bar.innerWidth
     implicitHeight: Config.bar.innerWidth
@@ -13,7 +15,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        // onClicked: will toggle launcher (Phase 4)
+        onClicked: root.visibilities.launcher = !root.visibilities.launcher
     }
 
     MaterialIcon {

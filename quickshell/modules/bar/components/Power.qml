@@ -12,6 +12,12 @@ Item {
     implicitWidth: Config.bar.innerWidth
     implicitHeight: powerIcon.implicitHeight + Appearance.padding.small * 2
 
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.visibilities.session = !root.visibilities.session
+    }
+
     MaterialIcon {
         id: powerIcon
 
