@@ -24,7 +24,7 @@ Slider {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            height: parent.height - root.handle.y - root.handle.height
+            height: parent.height - root.handle.y
             color: Colors.palette.m3primary
             radius: parent.radius
         }
