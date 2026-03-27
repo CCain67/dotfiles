@@ -13,7 +13,7 @@ Rectangle {
 
     implicitWidth: Config.bar.innerWidth + Appearance.padding.smaller
     implicitHeight: cpuLayout.implicitHeight + Appearance.padding.normal
-    color: Colors.palette.m3surfaceDim
+    color: Colors.palette.m3surface
     radius: 6
 
     property int cpuUtil: 0
@@ -123,7 +123,7 @@ Rectangle {
             Layout.bottomMargin: 4
             width: 22
             height: 2
-            color: Colors.palette.m3surface
+            color: Colors.palette.m3surfaceDim
         }
         MaterialIcon {
             Layout.alignment: Qt.AlignHCenter
@@ -137,7 +137,7 @@ Rectangle {
             Layout.bottomMargin: 4
             width: 22
             height: 2
-            color: Colors.palette.m3surface
+            color: Colors.palette.m3surfaceDim
         }
         StyledText {
             Layout.alignment: Qt.AlignHCenter

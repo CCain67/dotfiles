@@ -10,7 +10,7 @@ Rectangle {
 
     implicitWidth: Config.bar.innerWidth
     implicitHeight: clockLayout.implicitHeight + Appearance.padding.normal
-    color: Colors.palette.m3surfaceDim
+    color: Colors.palette.m3surface
     radius: 6
 
     ColumnLayout {

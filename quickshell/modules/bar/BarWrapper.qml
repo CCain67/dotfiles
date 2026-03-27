@@ -13,7 +13,7 @@ Item {
     required property ShellScreen screen
     required property DrawerVisibilities visibilities
 
-    readonly property int contentWidth: Config.bar.innerWidth + Appearance.padding.normal * 2
+    readonly property int contentWidth: Config.bar.innerWidth + Appearance.padding.normal * 2.5
     readonly property int exclusiveZone: contentWidth
 
     implicitWidth: contentWidth

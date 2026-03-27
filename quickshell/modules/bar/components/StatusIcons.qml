@@ -11,7 +11,7 @@ Rectangle {
 
     implicitWidth: Config.bar.innerWidth + Appearance.padding.smaller
     implicitHeight: iconCol.implicitHeight + Appearance.padding.normal
-    color: Colors.palette.m3surfaceDim
+    color: Colors.palette.m3surface
     radius: 6
 
     ColumnLayout {
