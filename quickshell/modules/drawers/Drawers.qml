@@ -29,7 +29,7 @@ Scope {
         name: "drawers"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.keyboardFocus: (Visibilities.visibilities.launcher || Visibilities.visibilities.session)
-            ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+            ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors.top: true
         anchors.bottom: true

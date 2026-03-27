@@ -54,8 +54,14 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        active: false
 
-        Component.onCompleted: active = Qt.binding(() => root.visibilities.session || root.visible)
+        Connections {
+            target: root.visibilities
+            function onSessionChanged(): void {
+                if (root.visibilities.session) content.active = true
+            }
+        }
 
         sourceComponent: Content {
             visibilities: root.visibilities

@@ -51,8 +51,14 @@ Item {
         id: content
         anchors.top: parent.top
         anchors.left: parent.left
+        active: false
 
-        Component.onCompleted: active = Qt.binding(() => root.visibilities.launcher || root.visible)
+        Connections {
+            target: root.visibilities
+            function onLauncherChanged(): void {
+                if (root.visibilities.launcher) content.active = true
+            }
+        }
 
         sourceComponent: Content {
             visibilities: root.visibilities

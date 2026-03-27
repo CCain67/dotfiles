@@ -85,7 +85,7 @@ Item {
             font.pointSize: Appearance.font.size.normal
             clip: true
 
-            Component.onCompleted: forceActiveFocus()
+            Component.onCompleted: Qt.callLater(forceActiveFocus)
 
             Keys.onUpPressed: appList.decrementCurrentIndex()
             Keys.onDownPressed: appList.incrementCurrentIndex()

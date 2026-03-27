@@ -43,7 +43,7 @@ Item {
 
                 KeyNavigation.down: shutdown
 
-                Component.onCompleted: forceActiveFocus()
+                Component.onCompleted: Qt.callLater(forceActiveFocus)
 
                 Connections {
                     target: root.visibilities
