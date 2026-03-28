@@ -63,10 +63,6 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             spacing: Appearance.spacing.normal
 
-            Item {
-                implicitWidth: 1
-                implicitHeight: 10
-            }
             PowerButton {
                 icon: Config.session.icons.logout
                 command: Config.session.commands.logout
