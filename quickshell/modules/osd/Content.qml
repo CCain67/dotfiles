@@ -14,14 +14,6 @@ Item {
     implicitWidth: layout.implicitWidth + Appearance.padding.larger * 2
     implicitHeight: layout.implicitHeight + Appearance.padding.large * 2
 
-    Rectangle {
-        anchors.fill: parent
-        color: Colors.palette.m3surface
-        radius: Config.border.rounding
-
-        Behavior on color { CAnim {} }
-    }
-
     ColumnLayout {
         id: layout
         anchors.centerIn: parent
@@ -69,7 +61,7 @@ Item {
             }
             Item {
                 implicitWidth: 1
-                implicitHeight: 10
+                implicitHeight: 4
             }
             PowerButton {
                 icon: Config.session.icons.shutdown
@@ -77,7 +69,7 @@ Item {
             }
             Item {
                 implicitWidth: 1
-                implicitHeight: 10
+                implicitHeight: 4
             }
             PowerButton {
                 icon: Config.session.icons.hibernate
@@ -85,7 +77,7 @@ Item {
             }
             Item {
                 implicitWidth: 1
-                implicitHeight: 10
+                implicitHeight: 4
             }
             PowerButton {
                 icon: Config.session.icons.reboot
@@ -112,13 +104,14 @@ Item {
                 Quickshell.execDetached(button.command)
             }
             radius: parent.radius
-            color: Colors.palette.m3onSurface
+            color: Colors.foregroundLight
+            opacity: 1
         }
 
         MaterialIcon {
             anchors.centerIn: parent
             text: button.icon
-            color: Colors.palette.m3onSurface
+            color: Colors.foreground
             font.pointSize: Appearance.font.size.extraLarge
             font.weight: 500
         }

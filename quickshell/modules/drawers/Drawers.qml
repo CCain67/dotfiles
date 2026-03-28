@@ -54,10 +54,11 @@ Scope {
             bar: bar
         }
 
-        // Panel slide-in backgrounds (empty Phase 2 stub)
+        // Panel slide-in backgrounds
         Backgrounds {
             panels: panels
             bar: bar
+            osd: osdWrapper
         }
 
         // Panel content area — populated Phase 3+
@@ -75,6 +76,8 @@ Scope {
 
         // Right-edge OSD
         Osd.Wrapper {
+            id: osdWrapper
+
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right

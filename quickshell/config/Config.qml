@@ -73,13 +73,14 @@ Singleton {
         readonly property bool enableBrightness: true
         readonly property int sliderWidth: 30
         readonly property int sliderHeight: 150
+        readonly property int contentRevealDelay: 75  // ms to wait before fading in content
     }
 
     readonly property QtObject session: QtObject {
         readonly property bool vimKeybinds: false
 
         readonly property QtObject icons: QtObject {
-            readonly property string logout: "logout"
+            readonly property string logout: "exit_to_app"
             readonly property string shutdown: "power_settings_new"
             readonly property string hibernate: "downloading"
             readonly property string reboot: "cached"

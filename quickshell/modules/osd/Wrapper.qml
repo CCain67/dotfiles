@@ -12,6 +12,7 @@ Item {
     required property DrawerVisibilities visibilities
 
     readonly property bool expanded: hoverHandler.hovered || hideTimer.running
+    readonly property real contentHeight: content.implicitHeight
 
     onExpandedChanged: visibilities.osd = expanded
 
@@ -21,8 +22,8 @@ Item {
 
     Behavior on implicitWidth {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
-            duration: Appearance.anim.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+            duration: Appearance.anim.durations.expressiveFastSpatial
         }
     }
 
@@ -47,7 +48,11 @@ Item {
         opacity: root.expanded ? 1 : 0
 
         Behavior on opacity {
-            Anim { duration: Appearance.anim.durations.small }
+            SequentialAnimation {
+                // Delay only on reveal so content appears after the shape has extended
+                PauseAnimation { duration: content.opacity === 0 ? Config.osd.contentRevealDelay : 0 }
+                Anim { duration: Appearance.anim.durations.small }
+            }
         }
     }
 }
