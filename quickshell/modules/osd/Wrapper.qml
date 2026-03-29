@@ -22,7 +22,7 @@ Item {
 
     Behavior on implicitWidth {
         Anim {
-            easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+            easing.bezierCurve: Appearance.anim.curves.standard
             duration: Appearance.anim.durations.expressiveFastSpatial
         }
     }
