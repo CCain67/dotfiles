@@ -9,6 +9,7 @@ import "../../services"
 import "../../config"
 import "../bar"
 import "../osd" as Osd
+import "../launcher" as Launcher
 
 // Single-monitor drawers: full-screen overlay containing bar, border, and panel slots.
 // Input mask punches out the empty interior so clicks pass through to the desktop.
@@ -59,6 +60,7 @@ Scope {
             panels: panels
             bar: bar
             osd: osdWrapper
+            launcher: launcherWrapper
         }
 
         // Panel content area — populated Phase 3+
@@ -70,6 +72,17 @@ Scope {
             anchors.bottomMargin: Config.border.thickness
             anchors.leftMargin: bar.implicitWidth
             anchors.rightMargin: Config.border.thickness
+
+            visibilities: Visibilities.visibilities
+        }
+
+        // Left-edge launcher — anchored at bar.right, expands rightward
+        Launcher.Wrapper {
+            id: launcherWrapper
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: bar.right
 
             visibilities: Visibilities.visibilities
         }

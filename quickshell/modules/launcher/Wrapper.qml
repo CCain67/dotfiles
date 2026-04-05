@@ -4,54 +4,46 @@ import QtQuick
 import "../../components"
 import "../../config"
 
-// Slide-down wrapper for the app launcher.
-// Animates implicitHeight from 0 to content height when visibilities.launcher is true.
+// Launcher panel — collapses to zero width at the bar edge; expands rightward when visible.
+// Placed directly in Drawers.qml anchored top/bottom at bar.right, mirroring Osd.Wrapper.
 Item {
     id: root
 
     required property DrawerVisibilities visibilities
 
-    visible: height > 0
-    implicitWidth: content.implicitWidth
-    implicitHeight: 0
+    readonly property bool expanded: visibilities.launcher
+    readonly property real contentHeight: content.implicitHeight
 
-    states: State {
-        name: "visible"
-        when: root.visibilities.launcher
+    clip: true
 
-        PropertyChanges {
-            root.implicitHeight: content.implicitHeight
+    implicitWidth: expanded
+        ? content.implicitWidth + Appearance.padding.large
+        : 0
+
+    Behavior on implicitWidth {
+        Anim {
+            easing.bezierCurve: Appearance.anim.curves.standard
+            duration: Appearance.anim.durations.expressiveFastSpatial
         }
     }
-
-    transitions: [
-        Transition {
-            from: ""
-            to: "visible"
-            Anim {
-                target: root
-                property: "implicitHeight"
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
-                duration: Appearance.anim.durations.expressiveDefaultSpatial
-            }
-        },
-        Transition {
-            from: "visible"
-            to: ""
-            Anim {
-                target: root
-                property: "implicitHeight"
-                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
-                duration: Appearance.anim.durations.expressiveDefaultSpatial
-            }
-        }
-    ]
 
     Loader {
         id: content
         anchors.top: parent.top
+        anchors.topMargin: Config.border.thickness
         anchors.left: parent.left
+        anchors.leftMargin: Appearance.padding.normal
         active: false
+
+        opacity: root.expanded ? 1 : 0
+
+        Behavior on opacity {
+            SequentialAnimation {
+                // Delay only on reveal so content appears after the shape has extended
+                PauseAnimation { duration: content.opacity === 0 ? Config.osd.contentRevealDelay : 0 }
+                Anim { duration: Appearance.anim.durations.small }
+            }
+        }
 
         Connections {
             target: root.visibilities
