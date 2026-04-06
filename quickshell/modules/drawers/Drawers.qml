@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
 import "../../components"
@@ -50,17 +51,27 @@ Scope {
             intersection: Intersection.Xor
         }
 
-        // Screen border drawn behind everything
-        Border {
-            bar: bar
-        }
+        Item {
+            anchors.fill: parent
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                blurMax: 14
+                shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+            }
 
-        // Panel slide-in backgrounds
-        Backgrounds {
-            panels: panels
-            bar: bar
-            osd: osdWrapper
-            launcher: launcherWrapper
+            // Screen border drawn behind everything
+            Border {
+                bar: bar
+            }
+
+            // Panel slide-in backgrounds
+            Backgrounds {
+                panels: panels
+                bar: bar
+                osd: osdWrapper
+                launcher: launcherWrapper
+            }
         }
 
         // Panel content area — populated Phase 3+

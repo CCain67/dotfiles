@@ -29,6 +29,9 @@ PanelWindow {
             maskInverted: true
             maskThresholdMin: 0.5
             maskSpreadAtMin: 1
+            shadowEnabled: true
+            blurMax: 14
+            shadowColor: Qt.alpha("#000000", 0.8)
         }
     }
 

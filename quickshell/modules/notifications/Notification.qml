@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
@@ -32,6 +33,13 @@ StyledRect {
     radius: Appearance.rounding.normal
     implicitWidth: Config.notifs.width
     implicitHeight: inner.implicitHeight
+    layer.enabled: true
+    layer.effect: MultiEffect {
+        shadowEnabled: true
+        blurMax: 14
+        shadowVerticalOffset: 2
+        shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+    }
 
     // Slide in from right on creation
     x: Config.notifs.width
