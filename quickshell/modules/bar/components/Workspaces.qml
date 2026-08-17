@@ -71,7 +71,11 @@ Item {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: Hyprland.dispatch(`workspace ${parent.wsId}`)
+                    // NOTE: Hyprland is now on a Lua config (hypr/hyprland.lua), which
+                    // parses whatever this sends as a Lua expression rather than the
+                    // classic dispatcher string. `workspace ${id}` is no longer valid;
+                    // this must be the real hl.dsp.focus() call.
+                    onClicked: Hyprland.dispatch(`hl.dsp.focus({ workspace = ${parent.wsId} })`)
                 }
             }
         }

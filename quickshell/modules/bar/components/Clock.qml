@@ -68,5 +68,30 @@ Rectangle {
             font.pointSize: 9
             font.family: Appearance.font.family.mono
         }
+
+        Rectangle {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: 2
+            Layout.bottomMargin: 4
+            width: 22
+            height: 2
+            color: Colors.palette.m3surface
+        }
+
+        Text {
+            Layout.alignment: Qt.AlignHCenter
+            text: Time.format("MMM")
+            color: "#d4be98"
+            font.pointSize: 9
+            font.family: Appearance.font.family.mono
+        }
+
+        Text {
+            Layout.alignment: Qt.AlignHCenter
+            text: Time.format("d")
+            color: "#d4be98"
+            font.pointSize: 9
+            font.family: Appearance.font.family.mono
+        }
     }
 }
