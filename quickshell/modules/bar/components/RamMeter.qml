@@ -1,13 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
 import "../../../components"
 import "../../../services"
 import "../../../config"
 
 // Vertical RAM meter: used GB, memory icon, total GB.
-// Polls `free` every 30 seconds.
+// Values come from the shared SysUsage service.
 Rectangle {
     id: root
 
@@ -15,34 +13,6 @@ Rectangle {
     implicitHeight: ramLayout.implicitHeight + Appearance.padding.normal
     color: Colors.palette.m3surface
     radius: 6
-
-    property string ramUsed: "0G"
-    property string ramTotal: "0G"
-
-    Process {
-        id: ramPoller
-        running: true
-        command: ["bash", "-c", "free -b | awk '/Mem:/ { printf \"%.1f\\n%.0f\\n\", $3/1024/1024/1024, $2/1024/1024/1024 }'"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const lines = text.trim().split("\n")
-                if (lines.length >= 2) {
-                    root.ramUsed  = lines[0] + "G"
-                    root.ramTotal = lines[1] + "G"
-                }
-            }
-        }
-    }
-
-    Timer {
-        interval: 30000
-        running: true
-        repeat: true
-        onTriggered: {
-            ramPoller.running = false
-            ramPoller.running = true
-        }
-    }
 
     ColumnLayout {
         id: ramLayout
@@ -52,7 +22,7 @@ Rectangle {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: root.ramUsed
+            text: SysUsage.ramUsedStr
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: Colors.yellow
@@ -81,7 +51,7 @@ Rectangle {
         }
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: root.ramTotal
+            text: SysUsage.ramTotalStr
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: Colors.green

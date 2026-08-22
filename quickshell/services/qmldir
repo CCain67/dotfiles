@@ -5,4 +5,9 @@ singleton Screens 1.0 Screens.qml
 singleton Visibilities 1.0 Visibilities.qml
 singleton Brightness 1.0 Brightness.qml
 singleton Notifs 1.0 Notifs.qml
+singleton SysUsage 1.0 SysUsage.qml
+singleton SysInfo 1.0 SysInfo.qml
+singleton Audio 1.0 Audio.qml
+singleton Player 1.0 Player.qml
+singleton Weather 1.0 Weather.qml
 NotifData 1.0 NotifData.qml

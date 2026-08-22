@@ -30,7 +30,7 @@ Scope {
         screen: root.screen
         name: "drawers"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: (Visibilities.visibilities.launcher || Visibilities.visibilities.session)
+        WlrLayershell.keyboardFocus: (Visibilities.visibilities.launcher || Visibilities.visibilities.session || Visibilities.visibilities.dashboard)
             ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors.top: true
@@ -39,8 +39,8 @@ Scope {
         anchors.right: true
 
         // XOR mask: start with full window, subtract interior → only bar + border edges are interactive.
-        // Cleared when an overlay panel (launcher, osd) is open so the panel receives input.
-        mask: (Visibilities.visibilities.osd || Visibilities.visibilities.launcher) ? null : interiorMask
+        // Cleared when an overlay panel (launcher, osd, dashboard) is open so the panel receives input.
+        mask: (Visibilities.visibilities.osd || Visibilities.visibilities.launcher || Visibilities.visibilities.dashboard) ? null : interiorMask
 
         Region {
             id: interiorMask

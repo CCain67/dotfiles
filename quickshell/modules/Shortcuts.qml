@@ -10,6 +10,12 @@ Scope {
     }
 
     GlobalShortcut {
+        name: "dashboard"
+        description: "Toggle dashboard"
+        onPressed: Visibilities.visibilities.dashboard = !Visibilities.visibilities.dashboard
+    }
+
+    GlobalShortcut {
         name: "session"
         description: "Toggle power menu"
         onPressed: Visibilities.visibilities.session = !Visibilities.visibilities.session

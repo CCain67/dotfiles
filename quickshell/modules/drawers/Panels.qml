@@ -4,8 +4,9 @@ import QtQuick
 import "../../components"
 import "../../config"
 import "../session" as Session
+import "../dashboard" as Dashboard
 
-// Panel content area: session at bottom-left.
+// Panel content area: session at bottom-left, dashboard centered.
 Item {
     id: root
 
@@ -17,6 +18,12 @@ Item {
         anchors.left: parent.left
         anchors.bottomMargin: Appearance.padding.large
         anchors.leftMargin: Appearance.padding.large
+        visibilities: root.visibilities
+    }
+
+    // Centered dashboard — fills the interior so its scrim can dim the desktop
+    Dashboard.Wrapper {
+        anchors.fill: parent
         visibilities: root.visibilities
     }
 }

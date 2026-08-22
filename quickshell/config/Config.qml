@@ -94,6 +94,55 @@ Singleton {
         }
     }
 
+    readonly property QtObject dashboard: QtObject {
+        readonly property int width: 1100
+        readonly property int height: 700
+
+        // Themed app icons currently paint blank shell-wide (the launcher is
+        // affected too) because the quickshell package is built against Qt
+        // 6.11.0 while the system runs 6.11.1. Flip this to true after
+        // rebuilding quickshell-git to get real app icons back.
+        readonly property bool useAppIcons: false
+
+        // Profile avatar. Empty, or a missing file, falls back to a glyph.
+        readonly property string avatar: ""
+
+        // Quick-launch column. `entry` is matched against desktop entries;
+        // `icon` is the Material Symbol drawn when no app icon is used.
+        readonly property var shortcuts: [
+            { label: "Firefox",  entry: "firefox",         icon: "public" },
+            { label: "Terminal", entry: "org.kde.konsole", icon: "terminal" },
+            { label: "Files",    entry: "org.kde.dolphin", icon: "folder" },
+            { label: "Editor",   entry: "code",            icon: "code" },
+            { label: "Kate",     entry: "org.kde.kate",    icon: "edit_note" },
+            { label: "Steam",    entry: "steam",           icon: "sports_esports" }
+        ]
+
+        // Web shortcuts. `accent` names a raw Gruvbox colour on Colors.
+        readonly property var links: [
+            { label: "GitHub",  icon: "code",          url: "https://github.com",    accent: "purple" },
+            { label: "Reddit",  icon: "forum",         url: "https://reddit.com",    accent: "orange" },
+            { label: "YouTube", icon: "smart_display", url: "https://youtube.com",   accent: "red" },
+            { label: "Mail",    icon: "mail",          url: "https://mail.google.com", accent: "blue" },
+            { label: "Twitch",  icon: "videocam",      url: "https://twitch.tv",     accent: "purple" },
+            { label: "Docs",    icon: "menu_book",     url: "https://wiki.archlinux.org", accent: "green" }
+        ]
+    }
+
+    readonly property QtObject weather: QtObject {
+        // OpenWeather city id (4513583). Change with the id from openweathermap.org.
+        readonly property string cityId: "4513583"
+        readonly property string units: "imperial"   // or "metric"
+
+        // Read at runtime from a mode-600 file OUTSIDE this repo, so the key is
+        // never committed and is not world-readable. Create it with:
+        //   install -m600 /dev/null ~/.config/openweather.key
+        //   printf '%s' 'YOUR_KEY' > ~/.config/openweather.key
+        readonly property string keyFile: "$HOME/.config/openweather.key"
+
+        readonly property int pollInterval: 30 * 60 * 1000
+    }
+
     readonly property QtObject launcher: QtObject {
         readonly property int maxShown: 7
         readonly property bool vimKeybinds: false

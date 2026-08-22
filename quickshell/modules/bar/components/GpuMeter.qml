@@ -1,13 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
 import "../../../components"
 import "../../../services"
 import "../../../config"
 
 // Vertical GPU meter: GPU icon, utilization %, temperature with color coding.
-// Polls nvidia-smi every 3 seconds.
+// Values come from the shared SysUsage service.
 Rectangle {
     id: root
 
@@ -16,53 +14,7 @@ Rectangle {
     color: Colors.palette.m3surface
     radius: 6
 
-    property int gpuUtil: 0
-    property int gpuTemp: 0
-
-    property color tempColor: {
-        if (gpuTemp < 50) return Colors.green
-        if (gpuTemp < 70) return Colors.yellow
-        if (gpuTemp < 82) return Colors.orange
-        return Colors.red
-    }
-
-    Process {
-        id: utilPoller
-        running: true
-        command: ["bash", "-c", "nvidia-smi --query-gpu=utilization.gpu --format=csv,nounits,noheader"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const val = parseInt(text.trim())
-                if (!isNaN(val))
-                    root.gpuUtil = val
-            }
-        }
-    }
-
-    Process {
-        id: tempPoller
-        running: true
-        command: ["bash", "-c", "nvidia-smi --query-gpu=temperature.gpu --format=csv,nounits,noheader"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const val = parseInt(text.trim())
-                if (!isNaN(val))
-                    root.gpuTemp = val
-            }
-        }
-    }
-
-    Timer {
-        interval: 3000
-        running: true
-        repeat: true
-        onTriggered: {
-            utilPoller.running = false
-            utilPoller.running = true
-            tempPoller.running = false
-            tempPoller.running = true
-        }
-    }
+    readonly property color tempColor: SysUsage.tempColor(SysUsage.gpuTemp, 50, 70, 82)
 
     ColumnLayout {
         id: gpuLayout
@@ -72,7 +24,7 @@ Rectangle {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: root.gpuUtil.toString().padStart(2, "0") + "%"
+            text: SysUsage.gpuUtil.toString().padStart(2, "0") + "%"
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: Colors.yellow
@@ -101,7 +53,7 @@ Rectangle {
         }
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: root.gpuTemp.toString().padStart(2, "0") + "°"
+            text: SysUsage.gpuTemp.toString().padStart(2, "0") + "°"
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: root.tempColor

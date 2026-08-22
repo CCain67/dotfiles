@@ -5,4 +5,5 @@ PersistentProperties {
     property bool osd
     property bool launcher
     property bool session
+    property bool dashboard
 }

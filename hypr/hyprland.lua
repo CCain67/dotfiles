@@ -177,6 +177,7 @@ local mainMod = "SUPER"
 -- like the old `bind = mod, D, global, target` syntax.
 hl.bind(mainMod .. " + D", hl.dsp.global("quickshell:launcher"))
 hl.bind(mainMod .. " + P", hl.dsp.global("quickshell:session"))
+hl.bind(mainMod .. " + SPACE", hl.dsp.global("quickshell:dashboard"))
 
 -- Core
 hl.bind(mainMod .. " + Return",       hl.dsp.exec_cmd(terminal))
