@@ -95,7 +95,7 @@ Singleton {
     }
 
     readonly property QtObject dashboard: QtObject {
-        readonly property int width: 1100
+        readonly property int width: 1175
         readonly property int height: 620
 
         // Themed app icons currently paint blank shell-wide (the launcher is
