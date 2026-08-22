@@ -1,95 +1,102 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 import "../../../components"
 import "../../../config"
 import "../../../services"
 
-// System identity, from the SysInfo service.
+// System identity, from the SysInfo service. Each spec sits in its own tile.
 Card {
     title: "System Specs"
     icon: "monitor"
 
-    Column {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: Appearance.spacing.small
+    // "1 hour, 4 minutes" -> "1h 4m"; the tiles are too narrow for the long form.
+    function compactUptime(s: string): string {
+        return s.replace(/(\d+)\s*week(s?)/g, "$1w")
+                .replace(/(\d+)\s*day(s?)/g, "$1d")
+                .replace(/(\d+)\s*hour(s?)/g, "$1h")
+                .replace(/(\d+)\s*minute(s?)/g, "$1m")
+                .replace(/,/g, "");
+    }
 
-        SpecRow {
+    GridLayout {
+        anchors.fill: parent
+        columns: 2
+        columnSpacing: Appearance.spacing.small
+        rowSpacing: Appearance.spacing.small
+
+        SpecTile {
             icon: "public"
             label: "OS"
             value: SysInfo.os
+            accent: Colors.orange
         }
-        SpecRow {
+        SpecTile {
             icon: "desktop_windows"
             label: "WM"
             value: SysInfo.wm
+            accent: Colors.blue
         }
-        SpecRow {
+        SpecTile {
             icon: "terminal"
             label: "Shell"
             value: SysInfo.shell
+            accent: Colors.green
         }
-        SpecRow {
+        SpecTile {
             icon: "dns"
             label: "Host"
             value: SysInfo.host
+            accent: Colors.red
         }
-        SpecRow {
+        SpecTile {
             icon: "schedule"
             label: "Uptime"
-            value: SysInfo.uptime
+            value: compactUptime(SysInfo.uptime)
+            accent: Colors.purple
         }
-        SpecRow {
+        SpecTile {
             icon: "inventory_2"
             label: "Packages"
             value: SysInfo.packages
+            accent: Colors.cyan
         }
     }
 
-    component SpecRow: Item {
-        id: row
+    component SpecTile: Tile {
+        id: tile
 
-        required property string icon
+        showBadge: false
+
         required property string label
         required property string value
 
-        width: parent.width
-        implicitHeight: 24
+        // Nested layouts default to filling; both axes are set explicitly here
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
-        MaterialIcon {
-            id: rowIcon
-
+        Column {
             anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            text: row.icon
-            color: Colors.palette.m3primary
-            font.pointSize: Appearance.font.size.small
-        }
-
-        StyledText {
-            id: rowLabel
-
-            anchors.left: rowIcon.right
-            anchors.leftMargin: Appearance.spacing.small
-            anchors.verticalCenter: parent.verticalCenter
-            text: row.label
-            color: Colors.palette.m3outline
-            font.pointSize: Appearance.font.size.small
-        }
-
-        StyledText {
-            anchors.left: rowLabel.right
-            anchors.leftMargin: Appearance.spacing.small
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
-            text: row.value
-            color: Colors.palette.m3onSurface
-            font.pointSize: Appearance.font.size.small
-            font.family: Appearance.font.family.mono
-            horizontalAlignment: Text.AlignRight
-            elide: Text.ElideRight
+            spacing: 1
+
+            StyledText {
+                width: parent.width
+                text: tile.label
+                color: Colors.palette.m3outline
+                font.pointSize: Appearance.font.size.small
+                elide: Text.ElideRight
+            }
+
+            StyledText {
+                width: parent.width
+                text: tile.value
+                color: Colors.palette.m3onSurface
+                font.pointSize: Appearance.font.size.small
+                elide: Text.ElideRight
+            }
         }
     }
 }

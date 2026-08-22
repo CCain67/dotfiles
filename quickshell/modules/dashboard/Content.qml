@@ -113,7 +113,7 @@ Item {
                 }
 
                 Specs {
-                    Layout.preferredWidth: 230
+                    Layout.preferredWidth: 360
                     Layout.fillHeight: true
                 }
             }
@@ -130,7 +130,7 @@ Item {
                 }
 
                 Resources {
-                    Layout.preferredWidth: 230
+                    Layout.preferredWidth: 275
                     Layout.fillHeight: true
                 }
             }
