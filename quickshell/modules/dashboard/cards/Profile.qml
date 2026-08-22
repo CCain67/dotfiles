@@ -78,7 +78,7 @@ Card {
                 }
 
                 StyledText {
-                    text: "Online"
+                    text: "Alive (Probably)"
                     font.pointSize: Appearance.font.size.small
                     color: Colors.green
                 }

@@ -11,7 +11,7 @@ Singleton {
     readonly property int seconds: clock.seconds
 
     // 24-hour format — hardcoded, no config toggle
-    readonly property string timeStr: format("hh:mm")
+    readonly property string timeStr: format("h:mm ap")
     readonly property string hourStr: timeStr.split(":")[0] ?? ""
     readonly property string minuteStr: timeStr.split(":")[1] ?? ""
 

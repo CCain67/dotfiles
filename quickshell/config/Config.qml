@@ -96,7 +96,7 @@ Singleton {
 
     readonly property QtObject dashboard: QtObject {
         readonly property int width: 1100
-        readonly property int height: 700
+        readonly property int height: 620
 
         // Themed app icons currently paint blank shell-wide (the launcher is
         // affected too) because the quickshell package is built against Qt
