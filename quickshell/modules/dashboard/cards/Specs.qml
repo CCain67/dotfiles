@@ -59,7 +59,9 @@ Card {
         SpecTile {
             icon: "inventory_2"
             label: "Packages"
-            value: SysInfo.packages
+            value: SysInfo.updatable && SysInfo.updatable !== "0"
+                ? `${SysInfo.packages} (${SysInfo.updatable})`
+                : SysInfo.packages
             accent: Colors.cyan
         }
     }

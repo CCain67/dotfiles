@@ -15,6 +15,7 @@ Singleton {
     property string shell: "—"
     property string host: "—"
     property string packages: "—"
+    property string updatable: ""
     property string uptime: "—"
     property string user: "—"
 
@@ -68,6 +69,33 @@ Singleton {
         onTriggered: {
             uptimePoller.running = false;
             uptimePoller.running = true;
+        }
+    }
+
+    // checkupdates (pacman-contrib) syncs its own copy of the db, so it's safe
+    // to run without root and doesn't disturb the real pacman db. It hits the
+    // network, so it's kept separate from the one-shot above and polled slowly.
+    Process {
+        id: updatesPoller
+
+        running: true
+        command: ["bash", "-c", "checkupdates 2>/dev/null | wc -l"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const val = text.trim();
+                if (val)
+                    root.updatable = val;
+            }
+        }
+    }
+
+    Timer {
+        interval: 1800000
+        running: true
+        repeat: true
+        onTriggered: {
+            updatesPoller.running = false;
+            updatesPoller.running = true;
         }
     }
 }

@@ -49,7 +49,7 @@ Card {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: `${SysInfo.user}@${SysInfo.host}`
+            text: `@${SysInfo.host}`
             font.pointSize: Appearance.font.size.small
             font.family: Appearance.font.family.mono
             color: Colors.palette.m3outline
@@ -62,7 +62,7 @@ Card {
             implicitWidth: statusRow.implicitWidth + Appearance.padding.normal * 2
             implicitHeight: statusRow.implicitHeight + Appearance.padding.small * 2
             radius: Appearance.rounding.full
-            color: Qt.alpha(Colors.green, 0.16)
+            color: Qt.alpha(Colors.background, 0.0)
 
             RowLayout {
                 id: statusRow
