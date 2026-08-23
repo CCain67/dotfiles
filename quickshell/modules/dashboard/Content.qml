@@ -2,19 +2,23 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Layouts
 import "../../components"
 import "../../config"
 import "../../services"
-import "cards"
+import "pages"
 
-// Dashboard card grid.
+// Dashboard card: a page switcher over one of two pages.
+//   info → the card grid (pages/Info.qml)
+//   apps → the app launcher (pages/Apps.qml)
+// The page is state on Visibilities so the global shortcuts can open the
+// dashboard straight onto a given page (SUPER+SPACE → info, SUPER+D → apps).
 Item {
     id: root
 
     required property DrawerVisibilities visibilities
 
     readonly property int pad: Appearance.padding.large
+    readonly property string page: visibilities.page
 
     implicitWidth: Config.dashboard.width
     implicitHeight: Config.dashboard.height
@@ -22,14 +26,28 @@ Item {
     focus: true
     Keys.onEscapePressed: root.visibilities.dashboard = false
 
-    Component.onCompleted: Qt.callLater(forceActiveFocus)
+    // Only one thing claims focus per open: the Apps search field when that page
+    // is up, otherwise this item (which owns Escape). Without this the search
+    // field would silently keep focus after a page switch and swallow Escape.
+    function syncFocus(): void {
+        if (!root.visibilities.dashboard)
+            return;
+
+        if (root.page === "apps")
+            appsPage.focusSearch();
+        else
+            root.forceActiveFocus();
+    }
+
+    onPageChanged: syncFocus()
+    Component.onCompleted: Qt.callLater(syncFocus)
 
     Connections {
         target: root.visibilities
 
         function onDashboardChanged(): void {
             if (root.visibilities.dashboard)
-                root.forceActiveFocus();
+                Qt.callLater(root.syncFocus);
         }
     }
 
@@ -53,98 +71,128 @@ Item {
         }
     }
 
-    RowLayout {
-        anchors.fill: parent
-        anchors.margins: root.pad
-        spacing: Appearance.spacing.normal
+    Row {
+        id: pageSwitcher
 
-        // ── Left column: profile over power actions ──
-        ColumnLayout {
-            // Nested layouts default to filling; pin this one to its width
-            Layout.fillWidth: false
-            Layout.preferredWidth: 250
-            Layout.fillHeight: true
-            spacing: Appearance.spacing.normal
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.topMargin: root.pad
+        anchors.leftMargin: root.pad
+        height: Config.dashboard.pageHeader
+        spacing: Appearance.spacing.small
 
-            Profile {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 190
+        Repeater {
+            model: [
+                {
+                    page: "info",
+                    label: "Dashboard",
+                    icon: "dashboard"
+                },
+                {
+                    page: "apps",
+                    label: "Apps",
+                    icon: "apps"
+                }
+            ]
+
+            StyledRect {
+                id: tab
+
+                required property var modelData
+
+                readonly property bool active: root.page === modelData.page
+                readonly property color fg: active ? Colors.palette.m3primary : Colors.palette.m3onSurfaceVariant
+
+                implicitWidth: tabRow.implicitWidth + Appearance.padding.large * 2
+                implicitHeight: pageSwitcher.height
+                radius: Appearance.rounding.full
+                color: active ? Colors.palette.m3surfaceContainerHigh : "transparent"
+
+                Behavior on color {
+                    CAnim {}
+                }
+
+                StateLayer {
+                    function onClicked(): void {
+                        root.visibilities.page = tab.modelData.page;
+                    }
+                    radius: parent.radius
+                }
+
+                Row {
+                    id: tabRow
+
+                    anchors.centerIn: parent
+                    spacing: Appearance.spacing.small
+
+                    MaterialIcon {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: tab.modelData.icon
+                        color: tab.fg
+                        font.pointSize: Appearance.font.size.normal
+
+                        Behavior on color {
+                            CAnim {}
+                        }
+                    }
+
+                    StyledText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: tab.modelData.label
+                        color: tab.fg
+                        font.pointSize: Appearance.font.size.small
+
+                        Behavior on color {
+                            CAnim {}
+                        }
+                    }
+                }
             }
+        }
+    }
 
-            Wifi {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 56
-            }
+    // Page area. Both pages stay alive once built and cross-fade — the Info page
+    // owns no pollers of its own (SysUsage et al. are singletons), so keeping it
+    // instantiated costs nothing.
+    Item {
+        id: pageArea
 
-            Power {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                visibilities: root.visibilities
+        anchors.top: pageSwitcher.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.topMargin: Appearance.spacing.normal
+        anchors.leftMargin: root.pad
+        anchors.rightMargin: root.pad
+        anchors.bottomMargin: root.pad
+
+        Info {
+            anchors.fill: parent
+
+            visibilities: root.visibilities
+            opacity: root.page === "info" ? 1 : 0
+            visible: opacity > 0
+
+            Behavior on opacity {
+                Anim {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
 
-        // ── Right area ──
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: Appearance.spacing.normal
+        Apps {
+            id: appsPage
 
-            // Top row: clock + weather, sliders, specs
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: false
-                Layout.preferredHeight: 240
-                spacing: Appearance.spacing.normal
+            anchors.fill: parent
 
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    spacing: Appearance.spacing.normal
+            visibilities: root.visibilities
+            opacity: root.page === "apps" ? 1 : 0
+            visible: opacity > 0
 
-                    Clock {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 110
-                    }
-
-                    Weather {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                    }
+            Behavior on opacity {
+                Anim {
+                    duration: Appearance.anim.durations.small
                 }
-
-                Sliders {
-                    Layout.preferredWidth: 125
-                    Layout.fillHeight: true
-                }
-
-                Specs {
-                    Layout.preferredWidth: 360
-                    Layout.fillHeight: true
-                }
-            }
-
-            // Middle row: media player + resource usage
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: Appearance.spacing.normal
-
-                Media {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-
-                Resources {
-                    Layout.preferredWidth: 275
-                    Layout.fillHeight: true
-                }
-            }
-
-            // Bottom row: web shortcuts
-            Links {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 90
-                visibilities: root.visibilities
             }
         }
     }

@@ -3,7 +3,7 @@ import "../../../components"
 import "../../../services"
 import "../../../config"
 
-// OS logo button — toggles the app launcher.
+// OS logo button — opens the dashboard on its app launcher page.
 Item {
     id: root
 
@@ -15,7 +15,14 @@ Item {
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: root.visibilities.launcher = !root.visibilities.launcher
+        onClicked: {
+            if (root.visibilities.dashboard && root.visibilities.page === "apps") {
+                root.visibilities.dashboard = false;
+            } else {
+                root.visibilities.page = "apps";
+                root.visibilities.dashboard = true;
+            }
+        }
     }
 
     MaterialIcon {

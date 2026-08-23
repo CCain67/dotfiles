@@ -3,40 +3,50 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Widgets
-import "../../components"
-import "../../config"
-import "../../services"
+import "../../../components"
+import "../../../config"
+import "../../../services"
 
-// Filtered list of desktop entries. Requires searchText and visibilities.
-// launchCurrent() launches the highlighted entry and should be called on Enter.
+// Filtered list of desktop entries. Requires searchText; emits launched() after
+// starting an app so the host can dismiss itself.
+//
+// Unlike the old bar launcher this list is not capped — it fills whatever height
+// the host gives it and scrolls, so selection moves must keep the highlight in
+// view (see selectNext/selectPrev).
 ListView {
     id: root
 
     required property string searchText
-    required property DrawerVisibilities visibilities
+
+    signal launched
 
     function launchCurrent(): void {
         if (currentItem)
-            currentItem.launchApp()
+            currentItem.launchApp();
+    }
+
+    function selectNext(): void {
+        incrementCurrentIndex();
+        positionViewAtIndex(currentIndex, ListView.Contain);
+    }
+
+    function selectPrev(): void {
+        decrementCurrentIndex();
+        positionViewAtIndex(currentIndex, ListView.Contain);
     }
 
     property var filteredApps: {
-        const entries = DesktopEntries.applications.values
-        const text = searchText.toLowerCase()
-        const matched = text
-            ? entries.filter(a =>
-                a.name.toLowerCase().includes(text) ||
-                (a.comment && a.comment.toLowerCase().includes(text)) ||
-                (a.genericName && a.genericName.toLowerCase().includes(text)))
-            : entries.slice().sort((a, b) => a.name.localeCompare(b.name))
-        return matched.slice(0, Config.launcher.maxShown)
+        const entries = DesktopEntries.applications.values;
+        const text = searchText.toLowerCase();
+        return text ? entries.filter(a => a.name.toLowerCase().includes(text) || (a.comment && a.comment.toLowerCase().includes(text)) || (a.genericName && a.genericName.toLowerCase().includes(text))) : entries.slice().sort((a, b) => a.name.localeCompare(b.name));
     }
 
     model: filteredApps
-    onSearchTextChanged: currentIndex = 0
 
-    implicitWidth: Config.launcher.itemWidth
-    implicitHeight: (Config.launcher.itemHeight + spacing) * Math.min(count, Config.launcher.maxShown) - spacing
+    onSearchTextChanged: {
+        currentIndex = 0;
+        positionViewAtBeginning();
+    }
 
     spacing: Appearance.spacing.small
     clip: true
@@ -58,12 +68,12 @@ ListView {
         required property int index
 
         function launchApp(): void {
-            const entry = modelData
-            const base = Array.from(entry.command)
+            const entry = modelData;
+            const base = Array.from(entry.command);
             Quickshell.execDetached({
                 command: entry.runInTerminal ? [Config.terminal, "-e", ...base] : base,
                 workingDirectory: entry.workingDirectory || ""
-            })
+            });
         }
 
         width: root.width
@@ -71,8 +81,8 @@ ListView {
 
         StateLayer {
             function onClicked(): void {
-                delegateItem.launchApp()
-                root.visibilities.launcher = false
+                delegateItem.launchApp();
+                root.launched();
             }
             radius: Appearance.rounding.normal
         }

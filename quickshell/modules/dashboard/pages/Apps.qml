@@ -1,60 +1,48 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import "../../components"
-import "../../config"
-import "../../services"
+import "../../../components"
+import "../../../config"
+import "../../../services"
+import "../cards"
 
-// Launcher card: app results above, search bar below.
-Item {
+// App launcher page — the old bar launcher, rehoused as a dashboard page.
+// Search sits on top here (it was pinned to the bottom in the bar panel, where
+// it hugged the bar edge) and the list below it scrolls to fill the page.
+//
+// Root is a Card so the page matches the outlined containers on the Info page;
+// children land in the Card's body, so `parent` below is that body.
+Card {
     id: root
 
     required property DrawerVisibilities visibilities
 
-    readonly property int pad: Appearance.padding.large
     readonly property int searchRowHeight: 44
 
-    implicitWidth: Config.launcher.itemWidth + pad * 2
-    implicitHeight: pad + appList.implicitHeight + Appearance.spacing.normal + searchRowHeight + pad
-
-    // Background card
-    StyledRect {
-        anchors.fill: parent
-        radius: Appearance.rounding.large
-        color: Colors.palette.m3surfaceContainerHigh
-        Behavior on color { CAnim {} }
-    }
-
-    AppList {
-        id: appList
-        anchors.top: parent.top
-        anchors.topMargin: root.pad
-        anchors.left: parent.left
-        anchors.leftMargin: root.pad
-        anchors.right: parent.right
-        anchors.rightMargin: root.pad
-        searchText: searchInput.text
-        visibilities: root.visibilities
+    function focusSearch(): void {
+        searchInput.forceActiveFocus();
     }
 
     // Search pill
     StyledRect {
         id: searchBar
-        anchors.top: appList.bottom
-        anchors.topMargin: Appearance.spacing.normal
+
+        anchors.top: parent.top
         anchors.left: parent.left
-        anchors.leftMargin: root.pad
         anchors.right: parent.right
-        anchors.rightMargin: root.pad
         height: root.searchRowHeight
         radius: Appearance.rounding.full
         color: Colors.palette.m3surfaceContainerHighest
-        Behavior on color { CAnim {} }
+
+        Behavior on color {
+            CAnim {}
+        }
 
         MaterialIcon {
             id: searchIcon
+
             anchors.left: parent.left
-            anchors.leftMargin: root.pad
+            anchors.leftMargin: Appearance.padding.large
             anchors.verticalCenter: parent.verticalCenter
             text: "search"
             color: Colors.palette.m3onSurfaceVariant
@@ -75,6 +63,7 @@ Item {
 
         TextInput {
             id: searchInput
+
             anchors.left: searchIcon.right
             anchors.leftMargin: Appearance.spacing.small
             anchors.right: clearBtn.left
@@ -85,35 +74,36 @@ Item {
             font.pointSize: Appearance.font.size.normal
             clip: true
 
-            Component.onCompleted: Qt.callLater(forceActiveFocus)
-
-            Keys.onUpPressed: appList.decrementCurrentIndex()
-            Keys.onDownPressed: appList.incrementCurrentIndex()
-            Keys.onEscapePressed: root.visibilities.launcher = false
+            // The search field owns Escape while this page is focused, so it has
+            // to close the dashboard itself — Content.qml's own Escape handler
+            // does not see the key once this has focus.
+            Keys.onEscapePressed: root.visibilities.dashboard = false
+            Keys.onUpPressed: appList.selectPrev()
+            Keys.onDownPressed: appList.selectNext()
             Keys.onReturnPressed: {
-                appList.launchCurrent()
-                root.visibilities.launcher = false
+                appList.launchCurrent();
+                root.visibilities.dashboard = false;
             }
             Keys.onEnterPressed: {
-                appList.launchCurrent()
-                root.visibilities.launcher = false
+                appList.launchCurrent();
+                root.visibilities.dashboard = false;
             }
 
             Connections {
                 target: root.visibilities
-                function onLauncherChanged(): void {
-                    if (root.visibilities.launcher)
-                        searchInput.forceActiveFocus()
-                    else
-                        searchInput.text = ""
+
+                function onDashboardChanged(): void {
+                    if (!root.visibilities.dashboard)
+                        searchInput.text = "";
                 }
             }
         }
 
         MaterialIcon {
             id: clearBtn
+
             anchors.right: parent.right
-            anchors.rightMargin: root.pad
+            anchors.rightMargin: Appearance.padding.large
             anchors.verticalCenter: parent.verticalCenter
             text: "close"
             color: Colors.palette.m3onSurfaceVariant
@@ -123,12 +113,30 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked: searchInput.text = ""
+                onClicked: {
+                    searchInput.text = "";
+                    searchInput.forceActiveFocus();
+                }
             }
 
             Behavior on opacity {
-                Anim { duration: Appearance.anim.durations.small }
+                Anim {
+                    duration: Appearance.anim.durations.small
+                }
             }
         }
+    }
+
+    AppList {
+        id: appList
+
+        anchors.top: searchBar.bottom
+        anchors.topMargin: Appearance.spacing.normal
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        searchText: searchInput.text
+        onLaunched: root.visibilities.dashboard = false
     }
 }

@@ -9,7 +9,6 @@ import "../../components/containers"
 import "../../services"
 import "../../config"
 import "../bar"
-import "../launcher" as Launcher
 
 // Single-monitor drawers: full-screen overlay containing bar, border, and panel slots.
 // Input mask punches out the empty interior so clicks pass through to the desktop.
@@ -29,7 +28,7 @@ Scope {
         screen: root.screen
         name: "drawers"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.keyboardFocus: (Visibilities.visibilities.launcher || Visibilities.visibilities.session || Visibilities.visibilities.dashboard)
+        WlrLayershell.keyboardFocus: (Visibilities.visibilities.session || Visibilities.visibilities.dashboard)
             ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors.top: true
@@ -38,8 +37,8 @@ Scope {
         anchors.right: true
 
         // XOR mask: start with full window, subtract interior → only bar + border edges are interactive.
-        // Cleared when an overlay panel (launcher, dashboard) is open so the panel receives input.
-        mask: (Visibilities.visibilities.launcher || Visibilities.visibilities.dashboard) ? null : interiorMask
+        // Cleared while the dashboard is open so the panel receives input.
+        mask: Visibilities.visibilities.dashboard ? null : interiorMask
 
         Region {
             id: interiorMask
@@ -63,16 +62,9 @@ Scope {
             Border {
                 bar: bar
             }
-
-            // Panel slide-in backgrounds
-            Backgrounds {
-                panels: panels
-                bar: bar
-                launcher: launcherWrapper
-            }
         }
 
-        // Panel content area — populated Phase 3+
+        // Panel content area: session menu + dashboard
         Panels {
             id: panels
 
@@ -81,17 +73,6 @@ Scope {
             anchors.bottomMargin: Config.border.thickness
             anchors.leftMargin: bar.implicitWidth
             anchors.rightMargin: Config.border.thickness
-
-            visibilities: Visibilities.visibilities
-        }
-
-        // Left-edge launcher — anchored at bar.right, expands rightward
-        Launcher.Wrapper {
-            id: launcherWrapper
-
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: bar.right
 
             visibilities: Visibilities.visibilities
         }

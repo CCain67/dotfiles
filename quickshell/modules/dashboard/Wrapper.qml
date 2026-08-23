@@ -4,7 +4,7 @@ import QtQuick
 import "../../components"
 import "../../config"
 
-// Centered dashboard overlay. Unlike the launcher/session panels this one
+// Centered dashboard overlay. Unlike the session panel this one
 // does not attach to the screen border, so it needs no ShapePath background —
 // the card in Content.qml draws itself.
 //
