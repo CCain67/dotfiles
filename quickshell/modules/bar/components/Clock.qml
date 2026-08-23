@@ -64,7 +64,7 @@ Rectangle {
         Text {
             Layout.alignment: Qt.AlignHCenter
             text: Time.format("ddd")
-            color: "#d4be98"
+            color: Colors.palette.m3onSurface
             font.pointSize: 9
             font.family: Appearance.font.family.mono
         }
@@ -81,7 +81,7 @@ Rectangle {
         Text {
             Layout.alignment: Qt.AlignHCenter
             text: Time.format("MMM")
-            color: "#d4be98"
+            color: Colors.palette.m3onSurface
             font.pointSize: 9
             font.family: Appearance.font.family.mono
         }
@@ -89,7 +89,7 @@ Rectangle {
         Text {
             Layout.alignment: Qt.AlignHCenter
             text: Time.format("d")
-            color: "#d4be98"
+            color: Colors.palette.m3onSurface
             font.pointSize: 9
             font.family: Appearance.font.family.mono
         }

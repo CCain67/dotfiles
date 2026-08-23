@@ -7,11 +7,13 @@ import "../../config"
 import "../../services"
 import "pages"
 
-// Dashboard card: a page switcher over one of two pages.
-//   info → the card grid (pages/Info.qml)
-//   apps → the app launcher (pages/Apps.qml)
+// Dashboard card: a page switcher.
+//   info   → the card grid (pages/Info.qml)
+//   apps   → the app launcher (pages/Apps.qml)
+//   themes → the colour theme picker (pages/Themes.qml)
 // The page is state on Visibilities so the global shortcuts can open the
 // dashboard straight onto a given page (SUPER+SPACE → info, SUPER+D → apps).
+// Themes has no shortcut — it is reached through the tab strip.
 Item {
     id: root
 
@@ -29,6 +31,8 @@ Item {
     // Only one thing claims focus per open: the Apps search field when that page
     // is up, otherwise this item (which owns Escape). Without this the search
     // field would silently keep focus after a page switch and swallow Escape.
+    // The Themes page has no text input, so it takes the else branch and Escape
+    // keeps working there.
     function syncFocus(): void {
         if (!root.visibilities.dashboard)
             return;
@@ -92,6 +96,11 @@ Item {
                     page: "apps",
                     label: "Apps",
                     icon: "apps"
+                },
+                {
+                    page: "themes",
+                    label: "Themes",
+                    icon: "palette"
                 }
             ]
 
@@ -187,6 +196,19 @@ Item {
 
             visibilities: root.visibilities
             opacity: root.page === "apps" ? 1 : 0
+            visible: opacity > 0
+
+            Behavior on opacity {
+                Anim {
+                    duration: Appearance.anim.durations.small
+                }
+            }
+        }
+
+        Themes {
+            anchors.fill: parent
+
+            opacity: root.page === "themes" ? 1 : 0
             visible: opacity > 0
 
             Behavior on opacity {

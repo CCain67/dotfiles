@@ -148,6 +148,24 @@ Singleton {
         readonly property int itemHeight: 57
     }
 
+    // Colour themes. Each theme is a JSON file in `dir`; see themes/ and
+    // services/Theme.qml. The selected theme is persisted OUTSIDE this repo
+    // (~/.local/state) because ~/.config/quickshell is a symlink into it — but
+    // the wallpaper choice IS written back to the repo's hyprpaper.conf, so a
+    // theme swap is intentionally a one-line commit.
+    readonly property QtObject theme: QtObject {
+        readonly property string dir: "$HOME/dotfiles/themes"
+        readonly property string wallpaperRoot: "$HOME/dotfiles"
+        readonly property string stateFile: "$HOME/.local/state/quickshell/theme"
+        readonly property string hyprpaperConf: "$HOME/dotfiles/hypr/hyprpaper.conf"
+        readonly property string applyScript: "$HOME/dotfiles/scripts/theme-apply.sh"
+        readonly property string defaultTheme: "gruvbox-material-dark"
+
+        // Downstream app theming (konsole/vscode/zathura/firefox) is stubbed —
+        // the scripts print what they would do. Off until they are real.
+        readonly property bool applyDownstream: false
+    }
+
     readonly property QtObject services: QtObject {
         readonly property real audioIncrement: 0.05
         readonly property real brightnessIncrement: 0.05

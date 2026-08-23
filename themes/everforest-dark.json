@@ -1,0 +1,38 @@
+{
+  "name": "everforest-dark",
+  "label": "Everforest Dark",
+  "light": false,
+  "wallpaper": "wallpapers/everforest_1.jpg",
+
+  "red": "#e67e80",      
+  "darkRed": "#f85552",
+  "orange": "#e69875",   
+  "darkOrange": "#f57d26",
+  "yellow": "#dbbc7f",   
+  "darkYellow": "#dfa000",
+  "green": "#a7c080",    
+  "darkGreen": "#8da101",
+  "cyan": "#83c092",     
+  "darkCyan": "#35a77c",
+  "blue": "#7fbbb3",     
+  "darkBlue": "#3a94c5",
+  "purple": "#d699b6",   
+  "darkPurple": "#df69ba",
+
+  "grey": "#859289", 
+  "greyDark": "#7a8478", 
+  "greyLight": "#9da9a0",
+
+  "background": "#333c43",
+  "backgroundDark": "#293136",
+  "backgroundLight": "#4d5960",
+  "foreground": "#d3c6aa",
+  "foregroundDark": "#ddd0b4",
+  "foregroundLight": "#e8dcc1",
+
+  "surfaceLowest": "#293136",
+  "surfaceHigh":   "#3A464C",
+
+  "shadow": "#000000",
+  "scrim": "#000000"
+}

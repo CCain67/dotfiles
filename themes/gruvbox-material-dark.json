@@ -1,0 +1,38 @@
+{
+  "name": "gruvbox-material-dark",
+  "label": "Gruvbox Material Dark",
+  "light": false,
+  "wallpaper": "wallpapers/flower.jpg",
+
+  "red": "#ea6962",
+  "darkRed": "#c14a4a",
+  "orange": "#e78a4e",
+  "darkOrange": "#c35e0a",
+  "yellow": "#d8a657",
+  "darkYellow": "#b47109",
+  "green": "#a9b665",
+  "darkGreen": "#6c782e",
+  "cyan": "#89b482",
+  "darkCyan": "#4c7a5d",
+  "blue": "#7daea3",
+  "darkBlue": "#45707a",
+  "purple": "#d3869b",
+  "darkPurple": "#945e80",
+
+  "grey": "#928374",
+  "greyDark": "#7c6f64",
+  "greyLight": "#a89984",
+
+  "background": "#32302f",
+  "backgroundDark": "#252423",
+  "backgroundLight": "#504945",
+  "foreground": "#d4be98",
+  "foregroundDark": "#ddc7a1",
+  "foregroundLight": "#ebdbb2",
+
+  "surfaceLowest": "#252423",
+  "surfaceHigh": "#3c3836",
+
+  "shadow": "#000000",
+  "scrim": "#000000"
+}
