@@ -112,20 +112,6 @@ Singleton {
         // Profile avatar. Empty, or a missing file, falls back to a glyph.
         readonly property string avatar: ""
 
-        // Quick-launch column. `entry` is matched against desktop entries;
-        // `icon` is the Material Symbol drawn when no app icon is used.
-        // Currently UNUSED — the dashboard's left column now holds the power
-        // grid (cards/Power.qml); the Apps page (SUPER+D) covers app launching.
-        // Kept for the day a quick-launch card comes back.
-        readonly property var shortcuts: [
-            { label: "Firefox",  entry: "firefox",         icon: "public" },
-            { label: "Terminal", entry: "org.kde.konsole", icon: "terminal" },
-            { label: "Files",    entry: "org.kde.dolphin", icon: "folder" },
-            { label: "Editor",   entry: "code",            icon: "code" },
-            { label: "Kate",     entry: "org.kde.kate",    icon: "edit_note" },
-            { label: "Steam",    entry: "steam",           icon: "sports_esports" }
-        ]
-
         // Web shortcuts. `accent` names a raw Gruvbox colour on Colors.
         readonly property var links: [
             { label: "GitHub",  icon: "code",          url: "https://github.com",    accent: "purple" },
