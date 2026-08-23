@@ -56,33 +56,33 @@ Card {
         }
 
         // Status pill
-        Rectangle {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: Appearance.spacing.small
-            implicitWidth: statusRow.implicitWidth + Appearance.padding.normal * 2
-            implicitHeight: statusRow.implicitHeight + Appearance.padding.small * 2
-            radius: Appearance.rounding.full
-            color: Qt.alpha(Colors.background, 0.0)
+        // Rectangle {
+        //     Layout.alignment: Qt.AlignHCenter
+        //     Layout.topMargin: Appearance.spacing.small
+        //     implicitWidth: statusRow.implicitWidth + Appearance.padding.normal * 2
+        //     implicitHeight: statusRow.implicitHeight + Appearance.padding.small * 2
+        //     radius: Appearance.rounding.full
+        //     color: Qt.alpha(Colors.background, 0.0)
 
-            RowLayout {
-                id: statusRow
+        //     RowLayout {
+        //         id: statusRow
 
-                anchors.centerIn: parent
-                spacing: Appearance.spacing.small
+        //         anchors.centerIn: parent
+        //         spacing: Appearance.spacing.small
 
-                Rectangle {
-                    implicitWidth: 7
-                    implicitHeight: 7
-                    radius: Appearance.rounding.full
-                    color: Colors.green
-                }
+        //         Rectangle {
+        //             implicitWidth: 7
+        //             implicitHeight: 7
+        //             radius: Appearance.rounding.full
+        //             color: Colors.green
+        //         }
 
-                StyledText {
-                    text: "Alive (Probably)"
-                    font.pointSize: Appearance.font.size.small
-                    color: Colors.green
-                }
-            }
-        }
+        //         StyledText {
+        //             text: "Alive (Probably)"
+        //             font.pointSize: Appearance.font.size.small
+        //             color: Colors.green
+        //         }
+        //     }
+        // }
     }
 }
