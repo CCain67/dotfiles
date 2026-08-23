@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import "../../../components"
 import "../../../config"
@@ -43,9 +44,18 @@ Card {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 radius: Appearance.rounding.small
-                color: Qt.alpha(accent, 0.16)
+                color: Colors.palette.m3surfaceContainerHighest
+                border.color: Colors.palette.m3outlineVariant
 
                 Behavior on color { CAnim {} }
+
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    shadowEnabled: true
+                    blurMax: 10
+                    shadowVerticalOffset: 2
+                    shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+                }
 
                 StateLayer {
                     function onClicked(): void {
