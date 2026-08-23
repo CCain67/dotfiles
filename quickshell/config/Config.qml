@@ -67,13 +67,12 @@ Singleton {
         }
     }
 
-    readonly property QtObject osd: QtObject {
-        readonly property bool enabled: true
-        readonly property int hideDelay: 2000
-        readonly property bool enableBrightness: true
+    // Shared panel behaviour. Was `osd` until the right-edge OSD was retired;
+    // these two keys outlived it (launcher reveal, dashboard sliders).
+    readonly property QtObject panels: QtObject {
+        readonly property int contentRevealDelay: 75  // ms to wait before fading in content
         readonly property int sliderWidth: 30
         readonly property int sliderHeight: 150
-        readonly property int contentRevealDelay: 75  // ms to wait before fading in content
     }
 
     readonly property QtObject session: QtObject {
@@ -98,7 +97,8 @@ Singleton {
         readonly property int width: 1320
         readonly property int height: 620
 
-        // Themed app icons currently paint blank shell-wide (the launcher is
+        // Read by nothing at the moment (its only consumer was the quick-launch
+        // card). Themed app icons currently paint blank shell-wide (the launcher is
         // affected too) because the quickshell package is built against Qt
         // 6.11.0 while the system runs 6.11.1. Flip this to true after
         // rebuilding quickshell-git to get real app icons back.
@@ -109,6 +109,9 @@ Singleton {
 
         // Quick-launch column. `entry` is matched against desktop entries;
         // `icon` is the Material Symbol drawn when no app icon is used.
+        // Currently UNUSED — the dashboard's left column now holds the power
+        // grid (cards/Power.qml); the launcher (SUPER+D) covers app launching.
+        // Kept for the day a quick-launch card comes back.
         readonly property var shortcuts: [
             { label: "Firefox",  entry: "firefox",         icon: "public" },
             { label: "Terminal", entry: "org.kde.konsole", icon: "terminal" },

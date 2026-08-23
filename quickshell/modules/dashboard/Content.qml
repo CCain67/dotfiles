@@ -58,7 +58,7 @@ Item {
         anchors.margins: root.pad
         spacing: Appearance.spacing.normal
 
-        // ── Left column: profile over quick launch ──
+        // ── Left column: profile over power actions ──
         ColumnLayout {
             // Nested layouts default to filling; pin this one to its width
             Layout.fillWidth: false
@@ -71,7 +71,7 @@ Item {
                 Layout.preferredHeight: 190
             }
 
-            QuickLaunch {
+            Power {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visibilities: root.visibilities

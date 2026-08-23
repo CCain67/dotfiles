@@ -5,7 +5,7 @@ import "../../components"
 import "../../config"
 
 // Launcher panel — collapses to zero width at the bar edge; expands rightward when visible.
-// Placed directly in Drawers.qml anchored top/bottom at bar.right, mirroring Osd.Wrapper.
+// Placed directly in Drawers.qml anchored top/bottom at bar.right.
 Item {
     id: root
 
@@ -40,7 +40,7 @@ Item {
         Behavior on opacity {
             SequentialAnimation {
                 // Delay only on reveal so content appears after the shape has extended
-                PauseAnimation { duration: content.opacity === 0 ? Config.osd.contentRevealDelay : 0 }
+                PauseAnimation { duration: content.opacity === 0 ? Config.panels.contentRevealDelay : 0 }
                 Anim { duration: Appearance.anim.durations.small }
             }
         }

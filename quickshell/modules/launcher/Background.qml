@@ -5,7 +5,7 @@ import "../../config"
 import "../../services"
 
 // ShapePath for the launcher panel background.
-// Mirrors osd/Background.qml but grows rightward from the bar (left) edge:
+// Grows rightward from the bar (left) edge:
 //   - top-left and bottom-left corners are concave (attach to bar)
 //   - top-right corner is 90° (flush against top screen border)
 //   - bottom-right corner is convex (normal rounded far corner)

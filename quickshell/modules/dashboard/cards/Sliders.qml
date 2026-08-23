@@ -37,8 +37,8 @@ Card {
 
         Item {
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: Config.osd.sliderWidth
-            implicitHeight: Config.osd.sliderHeight
+            implicitWidth: Config.panels.sliderWidth
+            implicitHeight: Config.panels.sliderHeight
 
             FilledSlider {
                 id: control

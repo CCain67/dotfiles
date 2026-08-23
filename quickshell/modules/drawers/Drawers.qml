@@ -9,7 +9,6 @@ import "../../components/containers"
 import "../../services"
 import "../../config"
 import "../bar"
-import "../osd" as Osd
 import "../launcher" as Launcher
 
 // Single-monitor drawers: full-screen overlay containing bar, border, and panel slots.
@@ -39,8 +38,8 @@ Scope {
         anchors.right: true
 
         // XOR mask: start with full window, subtract interior → only bar + border edges are interactive.
-        // Cleared when an overlay panel (launcher, osd, dashboard) is open so the panel receives input.
-        mask: (Visibilities.visibilities.osd || Visibilities.visibilities.launcher || Visibilities.visibilities.dashboard) ? null : interiorMask
+        // Cleared when an overlay panel (launcher, dashboard) is open so the panel receives input.
+        mask: (Visibilities.visibilities.launcher || Visibilities.visibilities.dashboard) ? null : interiorMask
 
         Region {
             id: interiorMask
@@ -69,7 +68,6 @@ Scope {
             Backgrounds {
                 panels: panels
                 bar: bar
-                osd: osdWrapper
                 launcher: launcherWrapper
             }
         }
@@ -94,17 +92,6 @@ Scope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: bar.right
-
-            visibilities: Visibilities.visibilities
-        }
-
-        // Right-edge OSD
-        Osd.Wrapper {
-            id: osdWrapper
-
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
 
             visibilities: Visibilities.visibilities
         }

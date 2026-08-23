@@ -3,7 +3,7 @@ import "../../../components"
 import "../../../services"
 import "../../../config"
 
-// Power button — visual indicator only; power menu lives in the right-edge OSD.
+// Power button — toggles the session menu; the dashboard also has a power grid.
 Item {
     id: root
 
