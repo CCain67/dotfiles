@@ -108,7 +108,7 @@ Item {
                 }
 
                 Sliders {
-                    Layout.preferredWidth: 150
+                    Layout.preferredWidth: 125
                     Layout.fillHeight: true
                 }
 

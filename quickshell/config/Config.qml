@@ -94,7 +94,7 @@ Singleton {
     }
 
     readonly property QtObject dashboard: QtObject {
-        readonly property int width: 1320
+        readonly property int width: 1250
         readonly property int height: 620
 
         // Read by nothing at the moment (its only consumer was the quick-launch

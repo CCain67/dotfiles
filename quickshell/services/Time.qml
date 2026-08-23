@@ -10,10 +10,13 @@ Singleton {
     readonly property int minutes: clock.minutes
     readonly property int seconds: clock.seconds
 
-    // 24-hour format — hardcoded, no config toggle
-    readonly property string timeStr: format("h:mm ap")
-    readonly property string hourStr: timeStr.split(":")[0] ?? ""
-    readonly property string minuteStr: timeStr.split(":")[1] ?? ""
+    // 12-hour clock, with the meridiem kept separate so it can be styled
+    // independently (see dashboard/cards/Clock.qml).
+    readonly property string clockStr: format("h:mm")
+    readonly property string ampmStr: format("ap")
+    readonly property string timeStr: clockStr + ampmStr
+    readonly property string hourStr: clockStr.split(":")[0] ?? ""
+    readonly property string minuteStr: clockStr.split(":")[1] ?? ""
 
     function format(fmt: string): string {
         return Qt.formatDateTime(clock.date, fmt);

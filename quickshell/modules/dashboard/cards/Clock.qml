@@ -15,12 +15,26 @@ Card {
 
         Item { Layout.fillWidth: true }
 
-        StyledText {
-            text: Time.timeStr
-            font.family: Appearance.font.family.clock
-            font.pointSize: 44
-            font.weight: 500
-            color: Colors.palette.m3onSurface
+        RowLayout {
+            spacing: 2
+
+            StyledText {
+                text: Time.clockStr
+                font.family: Appearance.font.family.clock
+                font.pointSize: 44
+                font.weight: 500
+                color: Colors.palette.m3onSurface
+            }
+
+            StyledText {
+                Layout.alignment: Qt.AlignBottom
+                Layout.bottomMargin: 8
+                text: Time.ampmStr
+                font.family: Appearance.font.family.clock
+                font.pointSize: 18
+                font.weight: 500
+                color: Colors.palette.m3onSurfaceVariant
+            }
         }
 
         Rectangle {
