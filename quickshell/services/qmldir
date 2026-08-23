@@ -10,4 +10,5 @@ singleton SysInfo 1.0 SysInfo.qml
 singleton Audio 1.0 Audio.qml
 singleton Player 1.0 Player.qml
 singleton Weather 1.0 Weather.qml
+singleton Network 1.0 Network.qml
 NotifData 1.0 NotifData.qml

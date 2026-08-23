@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import "../../../components"
 import "../../../config"
 import "../../../services"
@@ -22,6 +23,16 @@ Card {
             implicitHeight: 132
             radius: Appearance.rounding.normal
             color: Colors.palette.m3surfaceContainerHighest
+            border.width: 1
+            border.color: Colors.palette.m3outlineVariant
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                shadowEnabled: true
+                blurMax: 10
+                shadowVerticalOffset: 2
+                shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+            }
 
             MaterialIcon {
                 anchors.centerIn: parent

@@ -71,6 +71,11 @@ Item {
                 Layout.preferredHeight: 190
             }
 
+            Wifi {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 56
+            }
+
             Power {
                 Layout.fillWidth: true
                 Layout.fillHeight: true

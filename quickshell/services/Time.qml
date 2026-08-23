@@ -12,7 +12,7 @@ Singleton {
 
     // 12-hour clock, with the meridiem kept separate so it can be styled
     // independently (see dashboard/cards/Clock.qml).
-    readonly property string clockStr: format("h:mm")
+    readonly property string clockStr: format("I:mm")
     readonly property string ampmStr: format("ap")
     readonly property string timeStr: clockStr + ampmStr
     readonly property string hourStr: clockStr.split(":")[0] ?? ""
