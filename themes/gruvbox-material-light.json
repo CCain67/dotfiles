@@ -1,0 +1,38 @@
+{
+  "name": "gruvbox-material-light",
+  "label": "Gruvbox Material Light",
+  "light": true,
+  "wallpaper": "wallpapers/wallpaper.jpg",
+
+  "darkRed": "#ea6962",
+  "red": "#c14a4a",
+  "darkOrange": "#e78a4e",
+  "orange": "#c35e0a",
+  "darkYellow": "#d8a657",
+  "yellow": "#b47109",
+  "darkGreen": "#a9b665",
+  "green": "#6c782e",
+  "darkCyan": "#89b482",
+  "cyan": "#4c7a5d",
+  "darkBlue": "#7daea3",
+  "blue": "#45707a",
+  "darkPurple": "#d3869b",
+  "purple": "#945e80",
+
+  "grey": "#928374",
+  "greyDark": "#7c6f64",
+  "greyLight": "#a89984",
+
+  "background": "#f2e5bc",
+  "backgroundDark": "#ebdbb2",
+  "backgroundLight": "#e6d5ae",
+  "foreground": "#654735",
+  "foregroundDark": "#252423",
+  "foregroundLight": "#4f3829",
+
+  "surfaceLowest": "#ebdbb2",
+  "surfaceHigh": "#eddeb5",
+
+  "shadow": "#000000",
+  "scrim": "#000000"
+}
