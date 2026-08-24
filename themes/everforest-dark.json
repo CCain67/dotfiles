@@ -1,6 +1,6 @@
 {
   "name": "everforest-dark",
-  "label": "Everforest Dark",
+  "label": "Everforest Dark (Hard)",
   "light": false,
   "wallpaper": "wallpapers/everforest_1.jpg",
 
@@ -23,15 +23,15 @@
   "greyDark": "#7a8478", 
   "greyLight": "#9da9a0",
 
-  "background": "#333c43",
-  "backgroundDark": "#293136",
-  "backgroundLight": "#4d5960",
+  "background": "#272e33",
+  "backgroundDark": "#1e2326",
+  "backgroundLight": "#374145",
   "foreground": "#d3c6aa",
   "foregroundDark": "#ddd0b4",
   "foregroundLight": "#e8dcc1",
 
   "surfaceLowest": "#293136",
-  "surfaceHigh":   "#3A464C",
+  "surfaceHigh":   "#2e383c",
 
   "shadow": "#000000",
   "scrim": "#000000"
