@@ -161,9 +161,10 @@ Singleton {
         readonly property string applyScript: "$HOME/dotfiles/scripts/theme-apply.sh"
         readonly property string defaultTheme: "gruvbox-material-dark"
 
-        // Downstream app theming (konsole/vscode/zathura/firefox) is stubbed —
-        // the scripts print what they would do. Off until they are real.
-        readonly property bool applyDownstream: false
+        // Downstream app theming: konsole, vscode, zathura and qt/gtk are live
+        // (scripts/theme/*.sh). Firefox is still a stub by choice — userChrome.css
+        // needs a pref flip and a full browser restart. See IMPROVEMENTS.md §7.4.
+        readonly property bool applyDownstream: true
     }
 
     readonly property QtObject services: QtObject {

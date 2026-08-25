@@ -1,0 +1,11 @@
+# Hand-written zathura settings.
+#
+# Colours are NOT set here — they are generated per theme into zathurarc.theme by
+# scripts/theme/zathura.sh and included at the bottom of this file. Adding a
+# colour line here would override the theme, since zathura applies settings in
+# file order and the include comes last.
+
+set font "GeistMono Nerd Font Bold 10"
+
+# Generated theme colours (scripts/theme/zathura.sh). Keep last.
+include zathurarc.theme

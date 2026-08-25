@@ -1,7 +1,14 @@
 # Theme Swapper
 
-**Status: built and working — all six phases done.** Corrections found during
-implementation are marked ⚠ below.
+**Status: phases 1–11 built and working.** Firefox remains a deliberate stub
+(§7.4). `Config.theme.applyDownstream` is **true** — a theme click now repaints
+Konsole (new tabs), VS Code (live), Zathura (next launch) and Qt/GTK (live). Corrections found during implementation are
+marked ⚠ below.
+
+Six themes ship today: gruvbox-material dark/light, everforest dark/light,
+paperwhite dark/light. The schema has grown past §2 — `shadow`, `scrim` and
+`flat` are live keys, and `Theme.applyCompositor()` pushes border/shadow/blur
+into Hyprland via `hyprctl eval`.
 
 Add a **Themes** page to the dashboard that swaps the shell's entire palette and the
 wallpaper at runtime, with the current theme surviving a restart, and with
@@ -256,49 +263,245 @@ gate the animation behind a "theme swap in progress" flag.
 
 ---
 
-## 7. Downstream app theming — placeholders only
+## 7. Downstream app theming — Phases 7–11
 
-Out of scope to implement, but the seams go in now so adding one later is a
-one-file change.
+Scoped 2026-08-25 against the live machine. **Guiding decision: prefer a named
+scheme, generate when none exists.** Konsole schemes and VS Code themes on this
+box are hand-curated per palette, so a theme swap *selects* the existing one
+rather than overwriting it with colors derived from the JSON. Where no curated
+artifact exists — paperwhite's terminal scheme, every KDE `.colors` file — the
+scripts derive it from the theme JSON instead. Both paths are permanent (§7.6),
+not one-time bootstrapping.
 
-`Theme.applyDownstream(theme)` shells out to a single entry point:
+### 7.1 Schema addition — the `apps` block
 
+Each theme JSON gains one nested object. Nested rather than more top-level keys,
+so `Colors.qml`'s raw-color contract stays exactly the ~22 flat hexes it is now:
+
+```json
+"apps": {
+  "konsoleScheme":  "Gruvbox Material Soft Dark",
+  "vscodeTheme":    "Gruvbox Material Dark",
+  "kdeColorScheme": "GruvboxMaterialDark",
+  "gtkIconTheme":   "Gruvbox-Plus-Dark"
+}
 ```
-dotfiles/scripts/theme-apply.sh <path-to-theme.json> [--dry-run]
-```
 
-which dispatches to per-app modules under `scripts/theme/`. Each ships as a stub
-that prints what it *would* write and exits 0:
+Every field is optional; a missing field means "leave that app alone". Note
+`theme-apply.sh`'s current `THEME_<KEY>` export loop filters to
+`type == "string" or "boolean"`, so it silently drops this object — it needs a
+second `jq` pass exporting `THEME_APP_KONSOLE_PROFILE` &c.
 
-| App | Mechanism (for whoever implements it) | Catch |
+### 7.2 What each target actually needs
+
+| App | Mechanism | Live reload? |
 |---|---|---|
-| **Konsole** | write `~/.local/share/konsole/<Theme>.colorscheme` (INI, `Color0`–`Color7` + intensity variants), point the profile's `ColorScheme=` at it | running instances don't reload; needs a new tab/window, or per-window D-Bus |
-| **VS Code** | merge `workbench.colorCustomizations` into `~/.config/Code/User/settings.json` with `jq` | `jq` rejects comments, and VS Code's settings.json permits them — strip-and-restore, or fail loudly rather than eating the user's comments |
-| **Zathura** | regenerate a `set recolor-*` / `set default-bg` include, sourced from `~/.config/zathura/zathurarc` | read at launch only; no live reload |
-| **Firefox** | `userChrome.css` in the active profile dir | requires `toolkit.legacyUserProfileCustomizations.stylesheets=true`; profile dir must be discovered, not hardcoded |
+| **Konsole** | `kwriteconfig6` the `[Appearance] ColorScheme` key of the single `chase.profile` | No — new tab/window only |
+| **VS Code** | rewrite the `workbench.colorTheme` line in `~/.config/Code/User/settings.json` | **Yes**, instantly |
+| **Zathura** | generate `zathurarc.theme`, `include`d from `zathurarc` | No — read at launch |
+| **Qt/KDE** | generate `~/.local/share/color-schemes/<X>.colors`, then `plasma-apply-colorscheme <X>` | **Yes** — KColorScheme repaints running apps |
+| **GTK** | cascades from the KDE scheme via `kde-gtk-config`; plus flip `gtk-application-prefer-dark-theme` and `gtk-icon-theme-name` in `~/.config/gtk-3.0/settings.ini` | Partially |
+| **Firefox** | **deferred** — see 7.4 | No |
 
-Gated by `Config.theme.applyDownstream`, defaulting to **false**, so the stubs
-can't surprise anyone mid-build. Keep all of this in shell scripts — none of it
-belongs in QML.
+### 7.3 Verified facts and live gotchas
 
----
+- ⚠ **The Firefox stub's path does not exist.** There is no `~/.mozilla/firefox`
+  on this machine. Profiles are at **`~/.config/mozilla/firefox/profiles.ini`**
+  (XDG layout), with `[Install…] Default=3dz4c2bx.default-release`. The Flatpak
+  tree `~/.var/app/org.mozilla.firefox` exists but is an empty 20K husk — the
+  native `/usr/bin/firefox` is the real one. Fix the comment even while deferred.
+- **The `jq` catch — ✅ resolved 2026-08-25.** `~/.config/Code/User/settings.json`
+  had a trailing comma and `jq .` rejected it outright; the comma is gone and it
+  parses now. The catch stands as a *rule*, not a current defect: settings.json is
+  JSONC and may legally regrow comments or trailing commas at any time. 7.2
+  therefore still specifies a targeted single-line rewrite of
+  `workbench.colorTheme` rather than a `jq` deep-merge — no strip-and-restore
+  dance, no risk of eating comments, and no dependency on the file staying
+  strict-JSON by luck.
+- **Konsole `Parent=` chain — ✅ resolved 2026-08-25.** Seven profiles declared
+  `Parent=chase.profile` against a file that did not exist, silently dropping
+  `Command=/bin/zsh`, `TerminalMargin=31` and the GeistMono font. `chase.profile`
+  has been restored (it had been renamed to match a colour scheme) and
+  `konsolerc` now has `DefaultProfile=chase.profile`.
+- **Consequence: `chase.profile` is now doing two jobs.** It is both the shared
+  parent (font, `Command`, margin, scrollbar) *and* the gruvbox-dark theme profile
+  — there is no longer a separate `Gruvbox Material Dark.profile`. Children
+  override `ColorScheme=`, so inheritance still works, and
+  `gruvbox-material-dark`'s `apps.konsoleProfile` is simply **`chase`**. Two
+  things follow for phase 8: (a) the generator must never rewrite `chase.profile`'s
+  `[General]` block, or it clobbers the shared keys every other profile inherits;
+  (b) generated profiles (§7.6) declare `Parent=chase.profile` and set nothing but
+  `Name` and `ColorScheme`.
+- Profile `Parent=` values are inconsistent — some relative (`chase.profile`),
+  some absolute (`/home/chase/.local/share/konsole/chase.profile`). Both resolve;
+  worth normalising to relative when `konsole/` is adopted into the repo in §7.5,
+  since an absolute `/home/chase` path in a tracked dotfile is a portability trap.
+- `chase.profile` points at the colorscheme `Gruvbox Material Soft Dark`, which
+  lives in **`/usr/share/konsole/`**, not `~/.local/share/konsole/`. The generator
+  must not assume a named scheme is local — check both before deciding a theme
+  has no scheme and needs one generated.
+- **Coverage gaps.** `paperwhite-{dark,light}` has neither a Konsole colorscheme
+  nor an installed VS Code theme. Installed VS Code themes are `sainnhe.gruvbox-material`,
+  `sainnhe.everforest`, `arcticicestudio.nord…`, `mvllow.rose-pine`. Konsole is
+  handled by the generator in §7.6; VS Code falls back to
+  `Default Light+`/`Default Dark+`.
+- Per-theme contrast keys (`gruvboxMaterial.darkContrast: soft`,
+  `everforest.darkContrast: hard`) are global in settings.json today. If they
+  should follow the theme they belong in the `apps` block too.
+- `qdbus` is **not installed**, so live Konsole reload would need `busctl`/
+  `dbus-send`. Not worth it — accept "new tabs only".
+- `kde-gtk-config 6.7.4` is installed and is what generated the existing
+  `~/.config/gtk-{3,4}.0/colors.css` from `kdeglobals`. GTK recoloring is
+  therefore mostly free once the KDE scheme applies — but it only recolors
+  **Breeze-GTK** (`gtk-theme-name=Breeze`), so don't change the GTK theme name.
+- Present and usable: `plasma-apply-colorscheme`, `kwriteconfig6`, `kreadconfig6`,
+  `konsoleprofile`, `jq 1.8.2`.
+
+### 7.4 Firefox — deferred, not dropped
+
+`userChrome.css` requires `toolkit.legacyUserProfileCustomizations.stylesheets=true`
+(set via `user.js`, never `prefs.js` under a running Firefox) **and** a full
+browser restart, so it can't be verified in the same loop as everything else.
+`firefox.sh` stays a stub; only its path comment gets the 7.3 correction.
+
+### 7.5 Repo adoption
+
+Decided: `~/.config/zathura` and `~/.local/share/konsole` move **into this repo**
+and become symlinks, matching `hypr/` and `quickshell/`, so generated theme state
+and the `chase.profile` fix are version-controlled.
+
+```
+dotfiles/konsole/   → ~/.local/share/konsole/
+dotfiles/zathura/   → ~/.config/zathura/
+```
+
+`kdeglobals`, `gtk-3.0/settings.ini` and VS Code's `settings.json` are **not**
+adopted — they are edited in place. They carry far more non-theme state than
+theme state, and `kdeglobals` in particular is rewritten by Plasma itself.
+
+Consequence, same as `hyprpaper.conf` in §5: a theme click now dirties
+`konsole/` and `zathura/` as well. Accepted for the same reason.
+
+### 7.6 Konsole — one profile, N schemes
+
+**Revised after QA.** The first build wrote a `.profile` per theme and repointed
+`konsolerc`'s `DefaultProfile` at it. That is not necessary: `DefaultProfile` can
+only name a `.profile` (Konsole cannot select a `.colorscheme` directly), but
+nothing says there has to be more than one. `chase.profile` is now the **only**
+profile, and a theme switch rewrites its `[Appearance] ColorScheme` key — so all
+per-theme state lives in `.colorscheme` files, and the ten `.profile` files Gogh
+and the first build left behind were deleted.
+
+Consequences:
+
+- The schema field is `apps.konsoleScheme` (a **colour scheme** name), not
+  `konsoleProfile`.
+- Only the `ColorScheme` key is touched. `chase.profile`'s `[General]` block
+  carries the font, `Command=/bin/zsh`, `TerminalMargin` and scrollbar position —
+  verified byte-identical after cycling all six themes.
+- A named scheme may live in `~/.local/share/konsole` **or** `/usr/share/konsole`
+  (gruvbox dark's `Gruvbox Material Soft Dark` is the latter). Check both.
+- Cost, accepted: Konsole's *Settings → Switch Profile* menu now lists one entry,
+  so a single terminal window can no longer be themed independently of the shell.
+- The six unreferenced `.colorscheme` files (Nord, Nord Light, Nordic, Rosé Pine,
+  Everforest Dark Medium/Soft) are kept as a **library** — a future Nord or Rosé
+  Pine theme just names one in `apps.konsoleScheme`.
+
+### 7.6.1 The generated fallback path
+
+`apps.konsoleProfile` is optional. When a theme omits it — paperwhite today —
+`konsole.sh` **derives** the scheme from the theme's raw colors rather than
+skipping the app:
+
+```
+~/.local/share/konsole/<label>.colorscheme    # generated, [Background]/[Foreground]/[Color0..7] + Intense
+```
+
+Rules the generator has to hold to:
+
+- Konsole wants **decimal `R,G,B`**, not hex, so every `THEME_*` value needs
+  converting. `Color0`=background, 1=red, 2=green, 3=yellow, 4=blue, 5=purple,
+  6=cyan, 7=foreground; the `ColorNIntense` row takes the bright variant and
+  `ColorNFaint` the `dark*` variant.
+- **Only ever write `chase.profile`'s `ColorScheme` key**, via `kwriteconfig6`.
+  Rewriting the file would lose the `[General]` block (§7.3).
+- Regenerate on **every** apply, not once. This is the point of keeping it a
+  script: editing `paperwhite-dark.json` and re-selecting the theme must reproduce
+  the terminal colors with no manual step. Overwrite unconditionally — a generated
+  file is derived state, and the theme JSON is its only source of truth.
+- Write a **generated-file header comment** into the `.colorscheme` naming the
+  theme JSON it came from, so a future session doesn't mistake it for a
+  hand-curated one and start editing it by hand.
+- A hand-curated scheme always wins: if `apps.konsoleProfile` is set, the
+  generator does not run for that theme and writes nothing.
+
+The same "named, else generated" shape is what phase 11 uses for KDE `.colors`,
+except there the generated path is the only path — no curated `.colors` exists
+per theme beyond the one `GruvboxMaterial` file.
+
+### 7.8 Defects the build surfaced
+
+Three real problems, none of which were visible from reading the config:
+
+1. **Flat themes break a derived terminal palette.** `paperwhite-*` is monochrome:
+   every accent is `#ebdbb2`, and `foregroundLight` is `#32302f` — the *background*
+   colour, because in the shell that role means "text ON an accent". Feeding it
+   straight into Konsole's `ForegroundIntense` and `Color7Intense` produced
+   **invisible bright-white text**. Fixed with a `pick()` contrast guard in
+   `konsole.sh`: a derived slot keeps its candidate only if the candidate's
+   relative luminance differs from the background by ≥ 0.12, else it falls back.
+   Verified against gruvbox dark, gruvbox light and paperwhite. **The general
+   lesson: the shell's colour roles are not a terminal palette**, and any future
+   generator that derives one must not assume a role name means what it sounds
+   like.
+2. **`set font "GeistMono Nerd Font Bold" 10` in `zathurarc` was never applied.**
+   zathura wants the size *inside* the quotes; as written it parsed as three
+   arguments and the whole line was discarded with
+   `warning: Too many arguments for :set`. Pre-existing, unrelated to theming,
+   found only because the generated include was checked for parse errors. Fixed
+   to `"GeistMono Nerd Font Bold 10"`.
+3. The Konsole `Parent=chase.profile` chain and the VS Code trailing comma, both
+   fixed by hand before the build — recorded in §7.3.
+4. **`recolor false` on light themes left PDFs bare white.** The first build
+   disabled zathura's `recolor` for any theme with `light: true`, reasoning that
+   a light theme should leave the page as authored. Wrong call: with `recolor`
+   off, `recolor-lightcolor` is ignored entirely and zathura renders the PDF's
+   own `#ffffff` paper, so paperwhite-light showed white pages rather than the
+   theme's `#f2e5bc`. `recolor` is now **always on**; a light theme maps white →
+   its off-white background and black → its dark foreground.
+5. **A profile per theme was unnecessary** — see the §7.6 revision.
+
+### 7.7 Enabling it
+
+`Config.theme.applyDownstream` stays **false** until every generator in 7.2 is
+real and verified, then flips to `true` in its own commit. `theme-apply.sh`'s
+existing per-generator `|| continue` guard already ensures one broken script
+can't take the shell's own theme switch down with it — keep that.
 
 ## 8. Config additions
 
-New tree in [config/Config.qml](quickshell/config/Config.qml):
+Live today in [config/Config.qml](quickshell/config/Config.qml):
 
 ```qml
 readonly property QtObject theme: QtObject {
     readonly property string dir: "$HOME/dotfiles/themes"
-    readonly property string stateFile: "$HOME/.local/state/quickshell/theme"
-    readonly property string default_: "gruvbox-material-dark"
     readonly property string wallpaperRoot: "$HOME/dotfiles"
+    readonly property string stateFile: "$HOME/.local/state/quickshell/theme"
+    readonly property string hyprpaperConf: "$HOME/dotfiles/hypr/hyprpaper.conf"
+    readonly property string applyScript: "$HOME/dotfiles/scripts/theme-apply.sh"
+    readonly property string defaultTheme: "gruvbox-material-dark"
     readonly property bool applyDownstream: false
-    readonly property bool writeHyprpaperConf: true   // rewrites the in-repo conf; see §5
 }
 ```
 
----
+Phase 7 needs **no new QML config keys** — the `apps` block lives in the theme
+JSON (§7.1) and every path the generators touch is a fixed `~/.config` or
+`~/.local/share` location the scripts can hardcode. Keep honouring the §3 ⚠ rule:
+`$HOME`-bearing config paths go in the *script body*, runtime values stay in argv.
+
+If per-app opt-out is wanted later, it belongs as booleans beside
+`applyDownstream` (`applyKonsole`, `applyQt`, …) rather than as more theme-JSON
+fields — it is a machine preference, not a property of the palette.
 
 ## 9. Phasing
 
@@ -312,8 +515,17 @@ Each phase leaves the shell working.
 | 4 | ✅ Wallpaper swap via `hyprctl hyprpaper wallpaper` + one-line conf rewrite | Verified: swapped to two other wallpapers and back; conf diff was exactly one line each time |
 | 5 | ✅ `scripts/theme-apply.sh` + four no-op app stubs | Dry run prints all four; `applyDownstream` is false |
 | 6 | ✅ Add **Everforest Dark** | Added; switching to it from the grid repaints the shell and persists |
+| 7 | ✅ `apps` block in every theme JSON + `theme-apply.sh` exports it as `THEME_APP_*`; `konsole/` and `zathura/` adopted as symlinks; absolute `Parent=` paths normalised to relative | Verified: all 6 themes valid JSON, `THEME_APP_*` reaches the generators (incl. `null` → empty string for paperwhite), `konsole --list-profiles` returns all 9 through the symlink |
+| 8 | ✅ **Konsole** — `kwriteconfig6` on `DefaultProfile` for named profiles, plus a permanent `.colorscheme`/`.profile` generator for themes without one (§7.6) | Both paths verified. The generated path exposed a real defect — see §7.8 |
+| 9 | ✅ **VS Code** — single-line `perl` rewrite of `workbench.colorTheme`; paperwhite falls back to `Default Light+`/`Default Dark+` | Round-tripped 3 themes; only that line differs, and a JSONC file with comments + trailing comma survives intact |
+| 10 | ✅ **Zathura** — generates `zathurarc.theme`, `include`d once from a now colour-free `zathurarc`; `recolor` follows the `light` flag | Idempotent (include added once over repeated runs); parses clean. Fixed a pre-existing `set font` syntax bug, see §7.8 |
+| 11 | ✅ **Qt/KDE + GTK** — `scripts/theme/qtgtk.sh` generates `<name>.colors`, runs `plasma-apply-colorscheme`, flips GTK `prefer-dark` + icon theme | **GTK cascade confirmed empirically**: `kde-gtk-config` regenerated both `gtk-{3,4}.0/colors.css` in the same minute. `applyDownstream` is now **true** |
 
-Phase 1 is the whole risk. Phases 2–6 are additive.
+Phase 1 was the whole risk. Phases 2–6 were additive and are done. Phases 7–11
+write files outside this repo — each one is reversible by hand, and
+`applyDownstream` stays false until 11 lands.
+
+**Deferred, not scheduled:** Firefox `userChrome.css` (§7.4).
 
 ## 10. Verification
 
@@ -334,10 +546,13 @@ Phase 1 is the whole risk. Phases 2–6 are additive.
 1. **A theme click dirties the repo — accepted.** `hypr/hyprpaper.conf`'s `path =`
    line is rewritten on each swap and theme choice becomes committed state. Edit
    the single line in place rather than regenerating the file (see §5).
-2. **Light themes: later.** The `light` flag is carried in the schema from day one
-   and `Colors.light` is wired to it, but only dark themes ship. `MaterialIcon`'s
-   hardcoded `grade: -25` stays as-is and becomes the first thing to fix when a
-   light theme is actually wanted — noted in §4 so it isn't rediscovered.
+2. ~~**Light themes: later.**~~ **Superseded — light themes shipped.** Three of
+   them (`gruvbox-material-light`, `everforest-light`, `paperwhite-light`), and
+   [MaterialIcon.qml](quickshell/components/MaterialIcon.qml) now reads
+   `grade: Colors.light ? 0 : -25` as §4 anticipated. Consequence for phase 7:
+   every downstream target needs a light *and* dark answer, and GTK's
+   `gtk-application-prefer-dark-theme` (hardcoded `true` today) has to follow the
+   theme's `light` flag.
 3. **Second theme: Everforest Dark** (medium background), from
    `sainnhe/everforest`.
 
@@ -355,3 +570,15 @@ separate `dim` statusline set. Two options when writing the JSON:
 I'd hand-pick — the tinted backgrounds exist precisely for "accent as a surface",
 which is what an M3 `*Container` role is. Worth pulling the exact hexes from the
 upstream repo at implementation time rather than trusting a from-memory palette.
+
+4. **Prefer a named scheme; generate when none exists** (phase 7). Konsole
+   schemes and VS Code themes are hand-curated per palette, so a swap selects one
+   rather than deriving colors. Where nothing curated exists — paperwhite's
+   terminal scheme, the KDE `.colors` files — `konsole.sh` derives it from the
+   theme JSON. **The generator is permanent and runs on every apply** (§7.6), so
+   editing a theme's JSON re-derives its terminal colors with no manual step; it
+   is not one-time bootstrapping to be deleted afterwards.
+5. **Qt/KDE and GTK are in scope**, though the original §7 omitted them. They are
+   the only targets that repaint running applications.
+6. **`konsole/` and `zathura/` move into this repo**; `kdeglobals`,
+   `gtk-3.0/settings.ini` and VS Code `settings.json` are edited in place (§7.5).

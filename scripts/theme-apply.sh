@@ -34,6 +34,20 @@ done < <(jq -r '
     | "\(.key | gsub("(?<c>[A-Z])"; "_\(.c)") | ascii_upcase)=\(.value)"
 ' "$THEME_FILE")
 
+# Second pass for the nested "apps" block (§7.1). The loop above filters to
+# scalars, so it drops this object entirely. Keys land as THEME_APP_<UPPER_SNAKE>,
+# e.g. apps.konsoleProfile -> THEME_APP_KONSOLE_PROFILE. A JSON null means "no
+# curated artifact for this theme" and is exported as the empty string, which is
+# what the generators test for.
+while IFS='=' read -r key value; do
+    export "THEME_APP_${key}=${value}"
+done < <(jq -r '
+    (.apps // {})
+    | to_entries[]
+    | select(.value | type == "string" or type == "boolean" or type == "null")
+    | "\(.key | gsub("(?<c>[A-Z])"; "_\(.c)") | ascii_upcase)=\(.value // "")"
+' "$THEME_FILE")
+
 export THEME_FILE DRY_RUN
 export THEME_NAME="${THEME_NAME:-unknown}"
 
@@ -41,7 +55,7 @@ echo "theme-apply: ${THEME_NAME}${DRY_RUN:+ (dry run)}"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-for generator in konsole vscode zathura firefox; do
+for generator in konsole vscode zathura qtgtk firefox; do
     script="$HERE/theme/${generator}.sh"
     [ -x "$script" ] || continue
 

@@ -5,3 +5,5 @@ migration_plan.md
 old_bar/
 
 shell/
+# Konsole writes these itself; they are cache/UI state, not theme state.
+konsole/*.tbcache

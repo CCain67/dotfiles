@@ -34,5 +34,12 @@
   "surfaceHigh": "#eae4ca",
 
   "shadow": "#000000",
-  "scrim": "#000000"
+  "scrim": "#000000",
+
+  "apps": {
+    "konsoleScheme":  "Everforest Light Soft",
+    "vscodeTheme":    "Everforest Light",
+    "kdeColorScheme": "EverforestLight",
+    "gtkIconTheme":   "Gruvbox-Plus-Light"
+  }
 }
