@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Effects
 import "../../components"
 import "../../config"
 import "../../services"
@@ -62,12 +61,9 @@ Item {
         radius: Appearance.rounding.large
         color: Colors.palette.m3surface
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            blurMax: 24
-            shadowVerticalOffset: 4
-            shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+        layer.enabled: !Theme.flat
+        layer.effect: Elevation {
+            level: "high"
         }
 
         MouseArea {

@@ -25,6 +25,7 @@ Singleton {
             name: "gruvbox-material-dark",
             label: "Gruvbox Material Dark (built-in)",
             light: false,
+            flat: false,
             wallpaper: "",
             wallpaperPath: "",
             red: "#ea6962",
@@ -70,6 +71,12 @@ Singleton {
     }
 
     readonly property bool light: raw.light ?? false
+
+    // A flat theme has no elevation: every shadow in the shell is switched off,
+    // Hyprland's window shadow and blur go with it, and the outline takes over
+    // the job of separating surfaces. Absent from a theme file → false, so the
+    // existing themes are untouched.
+    readonly property bool flat: raw.flat ?? false
     readonly property string wallpaper: raw.wallpaperPath ?? ""
     readonly property bool loaded: themes.length > 0
 
@@ -100,6 +107,7 @@ Singleton {
         `, "bash", name]);
 
         applyWallpaper();
+        applyCompositor();
 
         if (Config.theme.applyDownstream)
             Quickshell.execDetached(["bash", "-c", `exec "${Config.theme.applyScript}" "${Config.theme.dir}/$1.json"`, "bash", name]);
@@ -135,6 +143,78 @@ Singleton {
                 { print }
             ' "$conf" > "$tmp" && mv "$tmp" "$conf"
         `, "bash", monitor, path]);
+    }
+
+    // Pushes the theme at the compositor: window shadow, blur, border size and
+    // border colours. Without this a flat theme only flattens the shell — every
+    // terminal and PDF reader keeps Hyprland's own shadow and blur and reads as
+    // floating on top of the desktop, which is the whole thing a flat theme is
+    // trying to avoid.
+    //
+    // ⚠ `hyprctl keyword` DOES NOT WORK on this system. hyprland.lua means the
+    // Lua parser is active, and keyword returns "keyword can't work with
+    // non-legacy parsers. Use eval." The working form is `hyprctl eval` with the
+    // same hl.config() call the config file uses. Verified live 2026-08-24.
+    //
+    // Deliberately NOT gated behind Config.theme.applyDownstream: that flag
+    // guards the scripts/theme/* stubs, which write other applications' config
+    // files. This is the compositor hosting the shell, it writes nothing, and
+    // gating it would mean a flat theme does not work until the stubs are real.
+    //
+    // hyprland.lua keeps its own literals as the pre-shell default — they are
+    // what paints the boot, and rewriting the file on every theme click would be
+    // a second source of truth for one fact.
+    function applyCompositor(): void {
+        const t = root.raw;
+        if (!t)
+            return;
+
+        // Read flat off the theme object directly, NOT off root.flat. This runs
+        // from onRawChanged, and `flat` is itself a binding on `raw` — it has not
+        // necessarily re-evaluated yet when the change handler fires, so
+        // root.flat still holds the previous theme's value. Cost the first time:
+        // paperwhite repainted the shell but left Hyprland's shadow and blur on.
+        const flat = t.flat ?? false;
+        const hex = c => `rgba(${String(c ?? "#000000").replace("#", "")}ff)`;
+
+        // Active border: on a flat theme backgroundLight is nearly invisible
+        // against the page, so focus falls back to the mid-ink grey. Everywhere
+        // else backgroundLight/backgroundDark reproduce hyprland.lua's literals.
+        const active = hex(flat ? t.grey : t.backgroundLight);
+        const inactive = hex(t.backgroundDark);
+
+        // border_size is deliberately NOT set here. It is a static preference that
+        // hyprland.lua owns, not theme state — writing it from the shell silently
+        // overrode a hand-edited `border_size = 0` on the next theme switch.
+        Quickshell.execDetached(["bash", "-c", `exec hyprctl eval "$1" >/dev/null`, "bash", `hl.config({
+            general = {
+                col = { active_border = "${active}", inactive_border = "${inactive}" }
+            },
+            decoration = {
+                blur = { enabled = ${flat ? "false" : "true"} },
+                shadow = { enabled = ${flat ? "false" : "true"} }
+            }
+        })`]);
+    }
+
+    // Reassert at the compositor whenever the active theme changes. Bound to the
+    // theme rather than to apply() on purpose: Quickshell is autostarted by
+    // hyprland.lua, so a Hyprland restart resets these to the file's literals and
+    // this puts them back without the user touching anything.
+    onRawChanged: applyCompositor()
+
+    // A Hyprland config reload (`hyprctl reload`, or saving hyprland.lua) resets
+    // everything applyCompositor() set via `eval` back to the config file. Since
+    // hyprland.lua's decoration block does not mention `shadow`, that means the
+    // window shadow silently returns at Hyprland's *default* of enabled — a tight
+    // ee1a1a1a halo at range 4 that reads as a 1px border around every window on
+    // a flat theme. Blur comes back the same way. Reassert on the reload event.
+    Connections {
+        target: Hypr
+
+        function onConfigReloaded(): void {
+            root.applyCompositor();
+        }
     }
 
     // Re-scans themes/ so a newly dropped JSON file shows up without restarting

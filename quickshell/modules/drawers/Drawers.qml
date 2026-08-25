@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
 import "../../components"
@@ -51,11 +50,11 @@ Scope {
 
         Item {
             anchors.fill: parent
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: true
-                blurMax: 14
-                shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+            layer.enabled: !Theme.flat
+            layer.effect: Elevation {
+                level: "medium"
+                // The border is symmetric — a downward offset would sit it wrong.
+                shadowVerticalOffset: 0
             }
 
             // Screen border drawn behind everything

@@ -53,8 +53,8 @@ Card {
 
                 radius: Appearance.rounding.normal
                 color: cell.active ? Colors.palette.m3surfaceContainerHighest : Colors.palette.m3surfaceContainer
-                border.width: cell.active ? 2 : 1
-                border.color: cell.active ? Colors.palette.m3primary : Colors.palette.m3outlineVariant
+                border.width: cell.active ? 2 : Appearance.outline.width
+                border.color: cell.active ? Colors.palette.m3primary : Appearance.outline.color
 
                 Behavior on color {
                     CAnim {}
@@ -161,8 +161,8 @@ Card {
                                 implicitHeight: 20
                                 radius: Appearance.rounding.full
                                 color: cell.modelData[modelData] ?? "transparent"
-                                border.width: 1
-                                border.color: Colors.palette.m3outlineVariant
+                                border.width: Appearance.outline.width
+                                border.color: Appearance.outline.color
                             }
                         }
                     }

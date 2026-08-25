@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Effects
 import Quickshell
 import "../../../components"
 import "../../../config"
@@ -49,12 +48,9 @@ Card {
 
                 Behavior on color { CAnim {} }
 
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    shadowEnabled: true
-                    blurMax: 10
-                    shadowVerticalOffset: 2
-                    shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+                layer.enabled: !Theme.flat
+                layer.effect: Elevation {
+                    level: "low"
                 }
 
                 StateLayer {

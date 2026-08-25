@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import "../services"
 
 Singleton {
     id: root
@@ -45,6 +46,25 @@ Singleton {
             readonly property int large: 18
             readonly property int extraLarge: 28
         }
+    }
+
+    // Surface outlines. A flat theme has no shadows, so the hairline is the only
+    // thing separating a card from the page — it steps up from m3outlineVariant
+    // (greyDark) to m3outline (grey), roughly double the contrast at the same
+    // 1px width.
+    readonly property QtObject outline: QtObject {
+        readonly property int width: 1
+        readonly property color color: Theme.flat ? Colors.palette.m3outline : Colors.palette.m3outlineVariant
+    }
+
+    // Drop shadow ladder. Consumed by components/Elevation.qml; a theme with
+    // `flat: true` switches every shadow off there, not here.
+    readonly property QtObject shadows: QtObject {
+        readonly property int low: 8
+        readonly property int medium: 14
+        readonly property int high: 24
+        readonly property real alpha: 0.8
+        readonly property real alphaLow: 0.7
     }
 
     readonly property QtObject anim: QtObject {

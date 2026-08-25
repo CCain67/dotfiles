@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import "../../../components"
 import "../../../config"
 import "../../../services"
@@ -17,15 +16,12 @@ StyledRect {
 
     radius: Appearance.rounding.normal
     color: Colors.palette.m3surfaceContainerHigh
-    border.width: 1
-    border.color: Colors.palette.m3outlineVariant
+    border.width: Appearance.outline.width
+    border.color: Appearance.outline.color
 
-    layer.enabled: true
-    layer.effect: MultiEffect {
-        shadowEnabled: true
-        blurMax: 14
-        shadowVerticalOffset: 2
-        shadowColor: Qt.alpha(Colors.palette.m3shadow, 0.8)
+    layer.enabled: !Theme.flat
+    layer.effect: Elevation {
+        level: "medium"
     }
 
     Row {

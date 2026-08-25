@@ -1,0 +1,32 @@
+{
+  "name": "paperwhite-dark",
+  "label": "Paperwhite Dark",
+  "light": false,
+  "flat": true,
+  "wallpaper": "wallpapers/paperwhite-dark.png",
+
+  "red": "#ebdbb2",     "darkRed": "#ebdbb2",
+  "orange": "#ebdbb2",  "darkOrange": "#ebdbb2",
+  "yellow": "#ebdbb2",  "darkYellow": "#ebdbb2",
+  "green": "#ebdbb2",   "darkGreen": "#ebdbb2",
+  "cyan": "#ebdbb2",    "darkCyan": "#ebdbb2",
+  "blue": "#ebdbb2",    "darkBlue": "#ebdbb2",
+  "purple": "#ebdbb2",  "darkPurple": "#ebdbb2",
+
+  "grey": "#88806a",
+  "greyDark": "#5c574b",
+  "greyLight": "#a0957c",
+
+  "background": "#32302f",
+  "backgroundDark": "#32302f",
+  "backgroundLight": "#32302f",
+  "foreground": "#ebdbb2",
+  "foregroundDark": "#a0957c",
+  "foregroundLight": "#32302f",
+
+  "surfaceLowest": "#32302f",
+  "surfaceHigh": "#32302f",
+
+  "shadow": "#000000",
+  "scrim": "#000000"
+}

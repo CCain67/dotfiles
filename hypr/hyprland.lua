@@ -89,7 +89,7 @@ hl.config({
         gaps_in  = 8,
         gaps_out = 16,
 
-        border_size = 2,
+        border_size = 0,
 
         col = {
             active_border   = "rgba(504945ff)",
@@ -103,7 +103,7 @@ hl.config({
 
     decoration = {
         rounding = 12,
-
+        
         blur = {
             enabled            = true,
             size               = 6,
