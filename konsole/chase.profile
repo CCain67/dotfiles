@@ -1,5 +1,5 @@
 [Appearance]
-ColorScheme=Gruvbox Material Soft Dark
+ColorScheme=Everforest Dark Hard
 Font=GeistMono Nerd Font,10,-1,5,300,0,0,0,0,0,0,0,0,0,0,1,Light
 
 [General]
