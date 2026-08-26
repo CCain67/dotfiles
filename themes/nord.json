@@ -1,0 +1,45 @@
+{
+  "name": "nord",
+  "label": "Nord",
+  "light": false,
+  "wallpaper": "wallpapers/ship-nord.jpg",
+
+  "red": "#bf616a",
+  "darkRed": "#bf616a",
+  "orange": "#d08770",
+  "darkOrange": "#d08770",
+  "yellow": "#ebcb8b",
+  "darkYellow": "#ebcb8b",
+  "green": "#a3be8c",
+  "darkGreen": "#a3be8c",
+  "cyan": "#8fbcbb",
+  "darkCyan": "#8fbcbb",
+  "blue": "#81a1c1",
+  "darkBlue": "#81a1c1",
+  "purple": "#b48ead",
+  "darkPurple": "#b48ead",
+
+  "grey": "#d8dee9",
+  "greyDark": "#d8dee9",
+  "greyLight": "#d8dee9",
+
+  "background": "#2e3440",
+  "backgroundDark": "#3b4252",
+  "backgroundLight": "#4c566a",
+  "foreground": "#e5e9f0",
+  "foregroundDark": "#d8dee9",
+  "foregroundLight": "#eceff4",
+
+  "surfaceLowest": "#3b4252",
+  "surfaceHigh": "#3b4252",
+
+  "shadow": "#000000",
+  "scrim": "#000000",
+
+  "apps": {
+    "konsoleScheme":  "Nord",
+    "vscodeTheme":    "Nord",
+    "kdeColorScheme": "Nord",
+    "gtkIconTheme":   "Gruvbox-Plus-Dark"
+  }
+}
